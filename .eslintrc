@@ -1,0 +1,38 @@
+{ 
+  "extends": ["eslint:recommended"],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures":{
+      "jsx": true
+    }
+  },
+  "globals": {
+    "d3": false,
+    "L": false
+  },
+  "rules": {
+    "complexity": ["warn", 5],
+    "eqeqeq": "warn",
+    "max-statements": ["warn", 15],
+    "max-statements-per-line": ["warn", {"max": 1}],
+    "max-nested-callbacks": ["warn", 2],
+    "max-depth": ["warn", {"max": 2}],
+    "max-lines": ["warn", 200],
+    "no-eval": "warn",
+    "no-var": "warn",
+    "no-console": "off",
+    "no-return-assign": "warn",
+    "no-param-reassign": "warn",
+    "no-unused-vars": "warn",
+    "array-callback-return": "warn",
+    "prefer-const": "warn",
+    "quotes": ["warn", "double"],
+    "semi": ["warn", "always"]
+  }
+}
