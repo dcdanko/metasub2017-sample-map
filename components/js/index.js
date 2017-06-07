@@ -1,5 +1,7 @@
 import map from "./map";
 import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
+import citiesLayer from "./mapCitiesLayer";
+
 
 d3.queue()
   .defer(d3.json, "http://metasub-kobo-wrapper.herokuapp.com/")
@@ -27,8 +29,15 @@ function draw({rawSampleData, cityLocationsAndNames, boundShape}){
 
   const sampleMap = map();
 
+  console.log(citiesLayer);
+
+  citiesLayer
+    .map(sampleMap) //move this part to overlay module...
+    .data(cityLocationsAndNames);
+
   const d3Overlay = mapOverlay()
     .boundShape(boundShape)
+    .addVectorLayer(citiesLayer)
     .addTo(sampleMap);
 
   syncOverlayWithBasemap({map:sampleMap, d3Overlay});
