@@ -1,11 +1,22 @@
+import map from "./map";
+import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
+
 d3.queue()
   .defer(d3.json, "http://metasub-kobo-wrapper.herokuapp.com/")
-  .await((error, rawSampleData) => {
+  .defer(d3.csv, "data/cities.csv")
+  .defer(d3.json, "data/boundShape.geojson")
+  .await((error, rawSampleData, cityLocationsAndNames, boundShape) => {
     if (error) throw error;
-    draw({rawSampleData});
+    draw({rawSampleData, cityLocationsAndNames, boundShape});
 });
 
-function draw({rawSampleData}){
+function draw({rawSampleData, cityLocationsAndNames, boundShape}){
+
+  console.log("cities", cityLocationsAndNames);
+  console.log("samples", rawSampleData.map(d => d._geolocation));
+  console.log(boundShape);
+
+
   d3.select("#sample-map-2017")
     .styles({
       position: "relative",
@@ -14,16 +25,18 @@ function draw({rawSampleData}){
       background:"grey"
   });
 
+  const sampleMap = map();
 
+  const d3Overlay = mapOverlay()
+    .boundShape(boundShape)
+    .addTo(sampleMap);
 
-  console.log(rawSampleData.map(d => d._geolocation));
+  syncOverlayWithBasemap({map:sampleMap, d3Overlay});
 
-  const map = L.map("sample-map-2017").fitWorld(); 
+}
 
-
-
-  L.tileLayer("http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png", {
-    maxZoom: 18,
-    attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
-  }).addTo(map);
+function syncOverlayWithBasemap({map, d3Overlay}){
+  map.on("zoomstart",() => d3Overlay.hide());
+  map.on("zoomend",() => d3Overlay.show());
+  map.on("moveend", () => d3Overlay.update());
 }
