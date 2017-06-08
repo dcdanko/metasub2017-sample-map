@@ -8,7 +8,7 @@ const citiesLayer = mapOverlayLayer()
 
   .draw(function(){
     const {data, group, map} = this.props();
-    console.log(data);
+
     group.append("g").selectAll(".city")
       .data(data)
       .enter()
@@ -18,7 +18,8 @@ const citiesLayer = mapOverlayLayer()
         r:3,
         fill:d => d.live ? "red" : "orange",
         cx: d => map.latLngToLayerPoint(d).x,
-        cy: d => map.latLngToLayerPoint(d).y
+        cy: d => map.latLngToLayerPoint(d).y,
+        cursor:"pointer"
       })
       .on("mouseover", d => {console.log(d);});
 

@@ -13,3 +13,15 @@ export const processCitiesData = rawData => {
   });
   return cleanedData;
 };
+
+export const processSampleData = rawSamples => {
+  const cleanSamples = rawSamples.map(d => d);
+  return cleanSamples;
+};
+
+export const summarizeCitiesData = citiesData => {
+  //start date, end date, max samples, min samples
+  console.log(citiesData);
+  const summarizedCitiesData = {};
+  return summarizedCitiesData;
+};

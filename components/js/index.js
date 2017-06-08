@@ -1,45 +1,42 @@
 import map from "./map";
 import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
 import citiesLayer from "./mapCitiesLayer";
-import {processCitiesData} from "./data";
+import {processCitiesData, summarizeCitiesData} from "./data";
 
 
 d3.queue()
-  // .defer(d3.json, "http://metasub-kobo-wrapper.herokuapp.com/102154")
-  // .defer(d3.json, "http://metasub-kobo-wrapper.herokuapp.com/104862")
   .defer(d3.csv, "data/cities.csv")
   .defer(d3.json, "data/boundShape.geojson")
   .await((error, rawCityData, boundShape) => {
     if (error) throw error;
-    const cityData = processCitiesData(rawCityData);
-    loadSampleData({cityData, boundShape});
-    //console.log(cityData);
-    //draw({cityLocationsAndNames, boundShape});
+    const citiesData = processCitiesData(rawCityData);
+    loadSampleData({citiesData, boundShape});
 });
 
-function loadSampleData({cityData, boundShape}){
+function loadSampleData({citiesData, boundShape}){
   let position = 0;
-  cityData.forEach(city => {
+  citiesData.forEach(city => {
     if (city.live){
       d3.json(city.path, citySamples => {
         city.samples = citySamples;
+        city.sampleCount = citySamples.length;
         position++;
-        if (position === cityData.length){
-          draw({cityData, boundShape});
+        if (position === citiesData.length){
+          draw({citiesData, boundShape});
         }
       });
     }else{
       position++;
-      if (position === cityData.length){
-        draw({cityData, boundShape});
+      if (position === citiesData.length){
+        draw({citiesData, boundShape});
       }
     }
   });
 }
 
-function draw({cityData, boundShape}){
+function draw({citiesData, boundShape}){
 
-
+  const summarizedCitiesData = summarizeCitiesData(citiesData);
 
   d3.select("#sample-map-2017")
     .styles({
@@ -54,7 +51,7 @@ function draw({cityData, boundShape}){
 
 
   citiesLayer
-    .data(cityData);
+    .data(citiesData);
 
   const d3Overlay = mapOverlay()
     .boundShape(boundShape)
