@@ -5,21 +5,22 @@ const citiesLayer = mapOverlayLayer()
   .type("Point")
   .name("cities")
   .render("Vector")
-  .addPropMethods(["map"])
+
   .draw(function(){
-    const {data, group, geo,map} = this.props();
-    console.log(map);
+    const {data, group, map} = this.props();
+    console.log(data);
     group.append("g").selectAll(".city")
       .data(data)
       .enter()
       .append("circle")
       .attrs({
         class: "city",
-        r:5,
-        fill:"red",
+        r:3,
+        fill:d => d.live ? "red" : "orange",
         cx: d => map.latLngToLayerPoint(d).x,
-      cy: d => map.latLngToLayerPoint(d).y
-      });
+        cy: d => map.latLngToLayerPoint(d).y
+      })
+      .on("mouseover", d => {console.log(d);});
 
     return this;
   });

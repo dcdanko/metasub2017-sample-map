@@ -1,60 +1,60 @@
 name,name_full,id,lat,lon
-auckland,"Auckland, New Zealand",1492341,-36.84846,174.763332
-baltimore,"Baltimore, USA",1492543,39.299236,-76.609383
-barcelona,"Barcelona, Spain ",1492503,41.390205,2.154007
-beijing,"Beijing, China",1492406,39.913818,116.363625
-berlin,"Berlin, German ",1492439,52.517452,13.407655
-bogota,"Bogota, Colombia",1484805,4.624335,-74.063644
-boston,"Boston, USA",1484806,42.364506,-71.038887
-brisbane,"Brisbane, Australia",1492383,-27.469771,153.025124
-buenos_aires,"Buenos Aires, Argentina",1492342,-34.603684,-58.381559
-burlington,"Burlington, USA",1492570,44.475883,-73.212074
-cairo,"Cairo, Egypt",1484807,30.044437,31.235668
-chicago,"Chicago, USA",1492548,41.881832,-87.623177
-dc,"Washington, D.C., USA",1492613,38.889931,-77.009003
-denver,"Denver, USA",1492596,39.739236,-104.990251
-doha,"Doha, Qatar",1492473,25.285447,51.53104
-dusseldorf,"Dusseldorf, Germany",1490942,51.227741,6.773456
-fairbanks,"Fairbanks, USA",1492599,64.837778,-147.716389
-guangzhou,"Guangzhou, China",1492410,23.128994,113.25325
-hong_kong,"Hong Kong, China",1484808,22.39572,114.111111
-hyderabad,"Hyderabad, India",1491389,17.38535,78.486715
-ilorin,"Ilorin, Nigeria",1492461,8.479879,4.541814
-izmir,"Izmir, Turkey",1492536,38.423789,27.142837
-johannesburg,"Johannesburg, South Africa",1492506,-26.204091,28.047224
-lagos,"Lagos, Nigeria",1492467,6.524379,3.379206
-lisbon,"Lisbon, Portugal",1492464,38.736946,-9.142685
-london,"London, UK",1492512,51.507351,-0.127758
-marseille,"Marseille, France",1492435,43.296482,5.36978
-melbourne,"Melbourne, Australia",1491390,-37.816279,144.964246
-mexico_city,"Mexico City, Mexico",1492458,19.438105,-99.202766
-montevideo,"Montevideo, Uruguay",1492539,-34.901112,-56.164532
-moscow,"Moscow, Russia",1492476,55.755826,37.6173
-new_delhi,"New Delhi, India",1492442,28.613939,77.209021
-nigeria,,1484809,,
-novosibirsk,"Novosibirsk, Russia",1492479,55.008353,82.935733
-nyc,"New York City, USA",1484810,40.73061,-73.935242
-oslo,"Oslo, Norway",1484811,59.911491,10.757933
-paris,"Paris, France",1485716,48.858093,2.294694
-porto,"Porto, Portugal",1492470,41.157944,-8.629105
-ribeirao_preto,"Ribeirao Preto, Brazil",1492400,-21.170401,-47.810324
-rio_de_janiero,"Rio de Janeiro, Brazil ",1492394,-22.906847,-43.172896
-rome,"Rome, Italy",1484812,41.902783,12.496366
-sacramento,"Sacramento, USA",1484814,38.575764,-121.478851
-san_franscisco,"San Francisco, USA",1492604,37.774929,-122.419416
-santiago,"Santiago, Chile",1492403,-33.44889,-70.669265
-sao_paulo,"Sao Paulo, Brazil",1492397,-23.5475,-46.63611
-seattle,"Seattle, USA",1492607,47.606209,-122.332071
-sendai,"Sendai, Japan",1492452,38.268215,140.869356
-seoul,"Seoul, South Korea",1484815,37.5326,127.024612
-shanghai,"Shanghai, China",1492414,31.267401,121.522179
-sheffield,"Sheffield, UK",1492533,53.381129,-1.470085
-singapore,Singapore,1492482,1.29027,103.851959
-stockholm,"Stockholm, Sweden",1484816,59.334591,18.06324
-sydney,"Sydney, Australia",1484818,-33.865143,151.2099
-tehran,"Tehran, Iran",1492446,35.689197,51.388974
-tokyo,"Tokyo, Japan",1492455,35.709026,139.731992
-trento,"Trento, Italy",1492449,46.074779,11.121749
-vienna,"Vienna, Austria",1492389,48.208174,16.373819
-zagreb,"Zagreb, Croatia",1492432,45.815011,15.981919
-zurich,"Zurich, Switzerland",1492509,47.376887,8.541694
+auckland,"Auckland, New Zealand",,-36.84846,174.763332
+baltimore,"Baltimore, USA",,39.299236,-76.609383
+barcelona,"Barcelona, Spain ",,41.390205,2.154007
+beijing,"Beijing, China",,39.913818,116.363625
+berlin,"Berlin, German ",,52.517452,13.407655
+bogota,"Bogota, Colombia",,4.624335,-74.063644
+boston,"Boston, USA",,42.364506,-71.038887
+brisbane,"Brisbane, Australia",,-27.469771,153.025124
+buenos_aires,"Buenos Aires, Argentina",,-34.603684,-58.381559
+burlington,"Burlington, USA",,44.475883,-73.212074
+cairo,"Cairo, Egypt",,30.044437,31.235668
+chicago,"Chicago, USA",,41.881832,-87.623177
+dc,"Washington, D.C., USA",,38.889931,-77.009003
+denver,"Denver, USA",,39.739236,-104.990251
+doha,"Doha, Qatar",,25.285447,51.53104
+dusseldorf,"Dusseldorf, Germany",,51.227741,6.773456
+fairbanks,"Fairbanks, USA",,64.837778,-147.716389
+guangzhou,"Guangzhou, China",,23.128994,113.25325
+hong_kong,"Hong Kong, China",,22.39572,114.111111
+hyderabad,"Hyderabad, India",,17.38535,78.486715
+ilorin,"Ilorin, Nigeria",,8.479879,4.541814
+izmir,"Izmir, Turkey",,38.423789,27.142837
+johannesburg,"Johannesburg, South Africa",,-26.204091,28.047224
+lagos,"Lagos, Nigeria",,6.524379,3.379206
+lisbon,"Lisbon, Portugal",,38.736946,-9.142685
+london,"London, UK",,51.507351,-0.127758
+marseille,"Marseille, France",,43.296482,5.36978
+melbourne,"Melbourne, Australia",,-37.816279,144.964246
+mexico_city,"Mexico City, Mexico",,19.438105,-99.202766
+montevideo,"Montevideo, Uruguay",,-34.901112,-56.164532
+moscow,"Moscow, Russia",,55.755826,37.6173
+new_delhi,"New Delhi, India",,28.613939,77.209021
+novosibirsk,"Novosibirsk, Russia",,55.008353,82.935733
+nyc,"New York City, USA",,40.73061,-73.935242
+oslo,"Oslo, Norway",,59.911491,10.757933
+paris,"Paris, France",,48.858093,2.294694
+porto,"Porto, Portugal",,41.157944,-8.629105
+ribeirao_preto,"Ribeirao Preto, Brazil",,-21.170401,-47.810324
+rio_de_janiero,"Rio de Janeiro, Brazil ",,-22.906847,-43.172896
+rome,"Rome, Italy",,41.902783,12.496366
+sacramento,"Sacramento, USA",,38.575764,-121.478851
+san_franscisco,"San Francisco, USA",,37.774929,-122.419416
+santiago,"Santiago, Chile",,-33.44889,-70.669265
+sao_paulo,"Sao Paulo, Brazil",,-23.5475,-46.63611
+seattle,"Seattle, USA",,47.606209,-122.332071
+sendai,"Sendai, Japan",,38.268215,140.869356
+seoul,"Seoul, South Korea",,37.5326,127.024612
+shanghai,"Shanghai, China",,31.267401,121.522179
+sheffield,"Sheffield, UK",,53.381129,-1.470085
+singapore,Singapore,,1.29027,103.851959
+stockholm,"Stockholm, Sweden",,59.334591,18.06324
+sydney,"Sydney, Australia",,-33.865143,151.2099
+tehran,"Tehran, Iran",,35.689197,51.388974
+tokyo,"Tokyo, Japan",,35.709026,139.731992
+trento,"Trento, Italy",,46.074779,11.121749
+vienna,"Vienna, Austria",,48.208174,16.373819
+zagreb,"Zagreb, Croatia",,45.815011,15.981919
+zurich,"Zurich, Switzerland",,47.376887,8.541694
+buffalo,"Buffalo, USA",104862,42.903,-78.881
