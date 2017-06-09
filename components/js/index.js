@@ -1,7 +1,9 @@
+require("../scss/map.scss");
+
 import map from "./map";
 import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
 import citiesLayer from "./mapCitiesLayer";
-import {processCitiesData, summarizeCitiesData} from "./data";
+import {processCitiesData, processSampleData,summarizeCitiesData} from "./data";
 
 
 d3.queue()
@@ -15,28 +17,37 @@ d3.queue()
 
 function loadSampleData({citiesData, boundShape}){
   let position = 0;
+  const totalCities = citiesData.length;
+  const advancePositionOrDraw = () => {
+    position++;
+    if (position === totalCities){
+      draw({citiesData, boundShape});
+    }
+  };
+  const getSampleData = city => {
+    d3.json(city.path, citySamples => {
+        city.samples = processSampleData(citySamples);
+        city.sampleCount = city.samples.length;
+        city.minTime = d3.min(city.samples, sample => sample.time);
+        city.maxTime = d3.max(city.samples, sample => sample.time);
+        advancePositionOrDraw();
+      });
+  };
   citiesData.forEach(city => {
     if (city.live){
-      d3.json(city.path, citySamples => {
-        city.samples = citySamples;
-        city.sampleCount = citySamples.length;
-        position++;
-        if (position === citiesData.length){
-          draw({citiesData, boundShape});
-        }
-      });
+      getSampleData(city);
     }else{
-      position++;
-      if (position === citiesData.length){
-        draw({citiesData, boundShape});
-      }
+      advancePositionOrDraw();
     }
   });
 }
 
-function draw({citiesData, boundShape}){
+
+function draw({citiesData}){
 
   const summarizedCitiesData = summarizeCitiesData(citiesData);
+
+  console.log("summary",summarizedCitiesData);
 
   d3.select("#sample-map-2017")
     .styles({
@@ -51,10 +62,11 @@ function draw({citiesData, boundShape}){
 
 
   citiesLayer
-    .data(citiesData);
+    .data(summarizedCitiesData);
 
   const d3Overlay = mapOverlay()
-    .boundShape(boundShape)
+    //.boundShape(boundShape)
+    .coordinateBounds([[90,-180],[-90,180]])
     .addVectorLayer(citiesLayer)
     .addTo(sampleMap);
 
