@@ -6,52 +6,17 @@ if (!window.Promise) {
 
 require("../scss/map.scss");
 
+import loadData from "./dataLoad";
 import map from "./map";
 import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
 import citiesLayer from "./mapCitiesLayer";
-import {processCitiesData, addSampleDataToCities, summarizeCitiesData} from "./data";
+import {summarizeCitiesData} from "./dataClean";
 
 
-new Promise((resolve, reject) => {
-  d3.csv("data/cities.csv", (error, data) => {
-    if (error){
-      reject(error);
-    }else{
-      resolve(data);
-    }
-  });
-}).then(rawCityData => {
-    loadSampleData({citiesData: processCitiesData(rawCityData)});
-  })
-  .catch(error => {console.log(error);});
-
-const getSampleDataPromise = cityPath => new Promise((resolve, reject) => {
-  d3.json(cityPath, (error, data) => {
-    if (error){
-      reject(error);
-    }else{
-      resolve(data);
-    }
-  });
-});
-
-function loadSampleData({citiesData}){
-  
-  const sampleDataPromises = citiesData
-    .map(city => {
-      if (city.live){
-        return getSampleDataPromise(city.path);
-      }else{
-        return [];
-      }
-    });
-
-  Promise.all(sampleDataPromises).then(samplesData => {
-    const citiesDataWithSamples = addSampleDataToCities({citiesData, samplesData});
-    draw({citiesData: citiesDataWithSamples});
-  })
-  .catch(error => {console.log(error);});
-}
+loadData.then(citiesDataWithSamples => {
+      draw({citiesData: citiesDataWithSamples});
+    })
+    .catch(error => {console.log(error);});
 
 function draw({citiesData}){
 

@@ -22,7 +22,7 @@ export const processSampleData = rawSamples => {
 };
 
 export const addSampleDataToCities = ({citiesData, samplesData}) => {
-  console.log(citiesData);
+
   const citiesDataWithSamples = citiesData.map((city, i) => {
       const cityWithSamples = Object.assign({}, city);
 
