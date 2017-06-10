@@ -1,53 +1,61 @@
+//Promise polyfill
+import Promise from "promise-polyfill"; 
+if (!window.Promise) {
+  window.Promise = Promise;
+}
+
 require("../scss/map.scss");
 
 import map from "./map";
 import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
 import citiesLayer from "./mapCitiesLayer";
-import {processCitiesData, processSampleData,summarizeCitiesData} from "./data";
+import {processCitiesData, addSampleDataToCities, summarizeCitiesData} from "./data";
 
 
-d3.queue()
-  .defer(d3.csv, "data/cities.csv")
-  .defer(d3.json, "data/boundShape.geojson")
-  .await((error, rawCityData, boundShape) => {
-    if (error) throw error;
-    const citiesData = processCitiesData(rawCityData);
-    loadSampleData({citiesData, boundShape});
-});
-
-function loadSampleData({citiesData, boundShape}){
-  let position = 0;
-  const totalCities = citiesData.length;
-  const advancePositionOrDraw = () => {
-    position++;
-    if (position === totalCities){
-      draw({citiesData, boundShape});
-    }
-  };
-  const getSampleData = city => {
-    d3.json(city.path, citySamples => {
-        city.samples = processSampleData(citySamples);
-        city.sampleCount = city.samples.length;
-        city.minTime = d3.min(city.samples, sample => sample.time);
-        city.maxTime = d3.max(city.samples, sample => sample.time);
-        advancePositionOrDraw();
-      });
-  };
-  citiesData.forEach(city => {
-    if (city.live){
-      getSampleData(city);
+new Promise((resolve, reject) => {
+  d3.csv("data/cities.csv", (error, data) => {
+    if (error){
+      reject(error);
     }else{
-      advancePositionOrDraw();
+      resolve(data);
     }
   });
-}
+}).then(rawCityData => {
+    loadSampleData({citiesData: processCitiesData(rawCityData)});
+  })
+  .catch(error => {console.log(error);});
 
+const getSampleDataPromise = cityPath => new Promise((resolve, reject) => {
+  d3.json(cityPath, (error, data) => {
+    if (error){
+      reject(error);
+    }else{
+      resolve(data);
+    }
+  });
+});
+
+function loadSampleData({citiesData}){
+  
+  const sampleDataPromises = citiesData
+    .map(city => {
+      if (city.live){
+        return getSampleDataPromise(city.path);
+      }else{
+        return [];
+      }
+    });
+
+  Promise.all(sampleDataPromises).then(samplesData => {
+    const citiesDataWithSamples = addSampleDataToCities({citiesData, samplesData});
+    draw({citiesData: citiesDataWithSamples});
+  })
+  .catch(error => {console.log(error);});
+}
 
 function draw({citiesData}){
 
   const summarizedCitiesData = summarizeCitiesData(citiesData);
-
-  console.log("summary",summarizedCitiesData);
 
   d3.select("#sample-map-2017")
     .styles({
@@ -59,14 +67,13 @@ function draw({citiesData}){
 
   const sampleMap = map();
 
-
-
   citiesLayer
     .data(summarizedCitiesData);
 
   const d3Overlay = mapOverlay()
     //.boundShape(boundShape)
     .coordinateBounds([[90,-180],[-90,180]])
+    //.coordinateBounds([[42.96, -78.94], [42.832, -78.782]])
     .addVectorLayer(citiesLayer)
     .addTo(sampleMap);
 
