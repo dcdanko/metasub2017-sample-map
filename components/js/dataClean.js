@@ -21,16 +21,13 @@ const processSampleData = rawSamples => {
   return cleanSamples;
 };
 
-const getSampleFrequency = ({samples, timeExtent}) => {
-  const xScale = d3.scaleTime().domain(timeExtent.map(d => d3.timeHour(d)));
-  //const xScale = d3.scaleTime().domain(timeExtent);
+const getSampleFrequencyExtent = sampleFrequency => d3.extent(sampleFrequency, d => d.length);
+const getXScale = timeExtent => d3.scaleTime().domain(timeExtent.map(d => d3.timeHour(d)));
+const getYScale = sampleFrequencyExtent => d3.scaleSqrt().domain(sampleFrequencyExtent);
+
+const getSampleFrequency = ({samples, xScale, timeExtent}) => {
 
   const hourBins = d3.timeHours(d3.timeHour.offset(timeExtent[0], -1), d3.timeHour.offset(timeExtent[1], 1));
-
-  //console.log(d3.timeHour(timeExtent[0]), d3.timeHour(timeExtent[1]));
-
-
-
 
   const histogram = d3.histogram()
     .value(d => d.time)
@@ -48,15 +45,19 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
       if (cityWithSamples.live){
         const processedSamples = processSampleData(samplesData[i]);
         const timeExtent = d3.extent(processedSamples, d => d.time);
-        const sampleFrequency = getSampleFrequency({samples: processedSamples, timeExtent});
-        console.log(sampleFrequency);
+        const xScale = getXScale(timeExtent);
+        const sampleFrequency = getSampleFrequency({samples: processedSamples, xScale, timeExtent});
+        const sampleFrequencyExtent = getSampleFrequencyExtent(sampleFrequency);
+        const yScale =getYScale(sampleFrequencyExtent);
+
         //GET SAMPLES PER HOUR, GET CURRENT SAMPLES
         cityWithSamples.samples = processedSamples;
         cityWithSamples.sampleCount = cityWithSamples.samples.length;
-        //extent instead?
-        // cityWithSamples.minTime = d3.min(cityWithSamples.samples, sample => sample.time);
-        // cityWithSamples.maxTime = d3.max(cityWithSamples.samples, sample => sample.time);
-
+        cityWithSamples.timeExtent = timeExtent;
+        cityWithSamples.sampleFrequency = sampleFrequency;
+        cityWithSamples.sampleFrequencyExtent = sampleFrequencyExtent;
+        cityWithSamples.xScale = xScale;
+        cityWithSamples.yScale = yScale;
       }
 
       return cityWithSamples;
@@ -68,7 +69,8 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
 
 export const summarizeCitiesData = citiesData => {
 
-  const sampleCountExtent = d3.extent(citiesData, d => d.sampleCount);
+  const sampleTotalsExtent = d3.extent(citiesData, d => d.sampleCount);
+
 
   const allSamples = citiesData.filter(d => d.live).reduce((pv,cv) => {
     const samples = [...pv, ...cv.samples];
@@ -76,15 +78,20 @@ export const summarizeCitiesData = citiesData => {
   }, []);
 
   const timeExtent = d3.extent(allSamples, d => d.time);
-  const sampleFrequency = getSampleFrequency({samples:allSamples, timeExtent});
-  console.log(sampleFrequency.length);
+  const xScale = getXScale(timeExtent);
+  const sampleFrequency = getSampleFrequency({samples:allSamples, xScale, timeExtent});
+  const sampleFrequencyExtent = getSampleFrequencyExtent(sampleFrequency);
+  const yScale =getYScale(sampleFrequencyExtent);
 
   const summarizedCitiesData = {
     features: citiesData,
-    sampleFrequency,
-    sampleCountExtent,
     timeExtent,
-    radiusScale: d3.scaleSqrt().domain(sampleCountExtent).range([4,50])
+    sampleFrequency,
+    sampleFrequencyExtent,
+    sampleTotalsExtent,
+    xScale,
+    yScale,
+    radiusScale: d3.scaleSqrt().domain(sampleTotalsExtent).range([4,50])
   };
   return summarizedCitiesData;
 };

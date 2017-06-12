@@ -47,7 +47,7 @@ function draw({citiesData}){
       time: summarizedCitiesData.minTime
     });
 
-  console.log(mapState.width());
+
 
   //extract mapContainer id from mapContainer.node(), send to map module as argument
   const sampleMap = map();
@@ -65,6 +65,9 @@ function draw({citiesData}){
 
   //send summarized line dataset to 
   const mapTimeline = timeline()
+    .data(summarizedCitiesData.sampleFrequency)
+    .xScale(summarizedCitiesData.xScale)
+    .yScale(summarizedCitiesData.yScale)
     .width(mapState.width())
     .time(mapState.time())
     .selection(mapContainer);
