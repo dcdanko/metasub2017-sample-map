@@ -5,22 +5,32 @@ if (!window.Promise) {
   window.Promise = Promise;
 }
 
+import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
+import state from "./visualization-components/state";
+
 import loadData from "./dataLoad";
 import map from "./map";
-import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
+
 import citiesLayer from "./mapCitiesLayer";
 import {summarizeCitiesData} from "./dataClean";
 import timeline from "./timeline";
 
 
+
 loadData
   .then(citiesDataWithSamples => {
+    console.log("DATA LOADED");
     draw({citiesData: citiesDataWithSamples});
   })
-  .catch(error => {console.log(error);});
+  .catch(error => {
+    console.log(error);
+    throw error;
+  });
 
 function draw({citiesData}){
   const summarizedCitiesData = summarizeCitiesData(citiesData);
+
+  console.log(summarizedCitiesData);
 
   const mapContainer = d3.select("#sample-map-2017")
     .styles({
@@ -29,6 +39,15 @@ function draw({citiesData}){
       height:"80vh",
       background:"grey"
   });
+
+  const mapState = state()
+    .defaultValues({
+      width: mapContainer.node().getBoundingClientRect().width,
+      view: {view: "world"},
+      time: summarizedCitiesData.minTime
+    });
+
+  console.log(mapState.width());
 
   //extract mapContainer id from mapContainer.node(), send to map module as argument
   const sampleMap = map();
@@ -44,10 +63,32 @@ function draw({citiesData}){
 
   syncOverlayWithBasemap({map:sampleMap, d3Overlay});
 
+  //send summarized line dataset to 
   const mapTimeline = timeline()
+    .width(mapState.width())
+    .time(mapState.time())
     .selection(mapContainer);
 
   mapTimeline.draw();
+
+  mapState.registerCallback({
+    width(){
+      const {width} = this.props();
+      mapTimeline
+        .width(width)
+        .updateSize();
+    },
+    time(){
+      const {time} = this.props();
+      mapTimeline.time(time)
+        .updateTime();
+    }
+  });
+
+  d3.select(window).on("resize", () => {
+    mapState.update({width: mapContainer.node().getBoundingClientRect().width});
+  });
+
 }
 
 function syncOverlayWithBasemap({map, d3Overlay}){

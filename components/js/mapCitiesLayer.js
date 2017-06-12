@@ -9,6 +9,7 @@ const citiesLayer = mapOverlayLayer()
   .draw(function(){
     const {data, group, map} = this.props();
 
+
     group.append("g").selectAll(".city")
       .data(data.features)
       .enter()
