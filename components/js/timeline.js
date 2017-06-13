@@ -32,13 +32,15 @@ const methods = {
   drawSVG(){
     const {selection} = this.props();
     this._.svg = selection.append("svg")
+    .attrs({
+      class:"timeline"
+    })
     .styles({
         position: "absolute",
         "z-index":900,
         left: `${0}px`,
         bottom: `${0}px`,
-        "pointer-events":"none",
-        background:"darkgrey"
+        "pointer-events":"none"
       });
   },
   drawAxes(){
@@ -46,6 +48,9 @@ const methods = {
     this._.axes = axes()
       .selection(svg)
       .draw();
+    const {xAxis, yAxis} = this._.axes.props();
+    xAxis.attr("class", "timeline__axis");
+    yAxis.attr("class", "timeline__axis");
   },
   drawLine(){
 
@@ -78,8 +83,16 @@ const methods = {
 
   },
   setHeightFromRatio(){
-    const {heightWidthRatio, width} = this.props();
-    this._.height = heightWidthRatio * width;
+    const {heightWidthRatio, width, minHeight} = this.props();
+    // this._.height = heightWidthRatio * width;
+    console.log(heightWidthRatio * width);
+    if (heightWidthRatio * width > minHeight){
+      this._.height = heightWidthRatio * width;
+    }else{
+      this._.height = minHeight;
+    }
+    
+
   },
   updateSize(){
     this.setHeightFromRatio();
@@ -98,6 +111,7 @@ const timeline = () => {
       padding: {left: 35, bottom:30, right:15, top:10},
       textMargin: {left:10, top:15},
       width:800,
+      minHeight: 200,
       heightWidthRatio:.2,
       xScale: d3.scaleTime(),
       yScale: d3.scaleLinear()

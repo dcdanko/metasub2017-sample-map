@@ -1,4 +1,5 @@
 require("../scss/map.scss");
+require("../scss/timeline.scss");
 //Promise polyfill
 import Promise from "promise-polyfill"; 
 if (!window.Promise) {
@@ -37,7 +38,7 @@ function draw({citiesData}){
       position: "relative",
       width:"100%",
       height:"80vh",
-      background:"grey"
+      background:"black"
   });
 
   const mapState = state()
