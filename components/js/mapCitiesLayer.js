@@ -10,18 +10,18 @@ const citiesLayer = mapOverlayLayer()
     const {data, group, map} = this.props();
 
 
-    group.append("g").selectAll(".city")
+    group.append("g").selectAll(".map__city-circle")
       .data(data.features)
       .enter()
       .append("circle")
       .attrs({
-        class: "city",
+        class: "map__city-circle",
         r: d => d.hasOwnProperty("sampleCount") ? data.radiusScale(d.sampleCount) : 2,
-        fill:d => d.live ? "red" : "orange",
         cx: d => map.latLngToLayerPoint(d).x,
         cy: d => map.latLngToLayerPoint(d).y,
         cursor:"pointer"
       })
+      .classed("map__city-circle--inactive", d => d.live ? false : true)
       .on("mouseover", d => {console.log(d);});
 
     return this;

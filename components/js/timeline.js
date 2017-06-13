@@ -84,8 +84,6 @@ const methods = {
   },
   setHeightFromRatio(){
     const {heightWidthRatio, width, minHeight} = this.props();
-    // this._.height = heightWidthRatio * width;
-    console.log(heightWidthRatio * width);
     if (heightWidthRatio * width > minHeight){
       this._.height = heightWidthRatio * width;
     }else{
