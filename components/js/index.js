@@ -18,6 +18,7 @@ import timeline from "./timeline";
 
 
 
+
 loadData
   .then(citiesDataWithSamples => {
     console.log("DATA LOADED");
@@ -63,6 +64,8 @@ function draw({citiesData}){
     .addTo(sampleMap);
 
   syncOverlayWithBasemap({map:sampleMap, d3Overlay});
+
+
 
   //send summarized line dataset to 
   const mapTimeline = timeline()

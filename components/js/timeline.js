@@ -1,6 +1,6 @@
 import {getObjectWithPropMethods} from "./visualization-components/utils";
 import axes from "./visualization-components/histogram/axes";
-
+import line from "./visualization-components/lineChart/line";
 import slider from "./visualization-components/slider/slider";
 
 const props = getObjectWithPropMethods([
@@ -21,6 +21,7 @@ const methods = {
     this.setHeightFromRatio();
     this.setScales();
     this.drawAxes();
+    this.drawLine();
 
     this.updateSize();
 
@@ -53,7 +54,21 @@ const methods = {
     yAxis.attr("class", "timeline__axis");
   },
   drawLine(){
-
+    const {svg, xScale, yScale, data} = this.props();
+    this._.line = line()
+      .data(data)
+      .xValue(d => d.x1)
+      .yValue(d => d.length)
+      .xScale(xScale)
+      .yScale(yScale)
+      .selection(svg)
+      .draw();
+  },
+  resizeLine(){
+    const {line, yScale, xScale} = this.props();
+    line.xScale(xScale)
+      .yScale(yScale)
+      .updateSize();
   },
   drawSlider(){
 
@@ -79,9 +94,7 @@ const methods = {
       .xScale(xScale)
       .setSize();
   },
-  resizeLine(){
 
-  },
   setHeightFromRatio(){
     const {heightWidthRatio, width, minHeight} = this.props();
     if (heightWidthRatio * width > minHeight){
@@ -97,6 +110,7 @@ const methods = {
     this.setScales();
     this.resizeSVG();
     this.resizeAxes();
+    this.resizeLine();
   },
   updateView(){
 

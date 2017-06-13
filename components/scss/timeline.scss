@@ -6,6 +6,12 @@
     //shape-rendering: crispEdges;
 }
 
+.timeline__line{
+  stroke: white;
+  stroke-width:1px;
+  fill:none;
+}
+
     
 .timeline__axis text{
     font-family: sans-serif;
