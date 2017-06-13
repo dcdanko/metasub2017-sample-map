@@ -25,7 +25,8 @@ const processSampleData = rawSamples => {
 
 const getSampleFrequencyExtent = sampleFrequency => d3.extent(sampleFrequency, d => d.length);
 const getXScale = timeExtent => d3.scaleTime().domain(timeExtent.map(d => d3.timeHour(d)));
-const getYScale = sampleFrequencyExtent => d3.scaleSqrt().domain(sampleFrequencyExtent);
+const getYScale = sampleFrequencyExtent => d3.scaleSqrt()
+  .domain(sampleFrequencyExtent);
 
 const getSampleFrequency = ({samples, xScale, timeExtent}) => {
 

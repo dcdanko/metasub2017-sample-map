@@ -25,9 +25,6 @@ const methods = {
 
     this.updateSize();
 
-    
-    
-
     return this;
   },
   drawSVG(){
@@ -53,6 +50,13 @@ const methods = {
     xAxis.attr("class", "timeline__axis");
     yAxis.attr("class", "timeline__axis");
   },
+  updateAxes(){
+    const {axes, xScale, yScale} = this.props();
+      axes
+        .xScale(xScale)
+        .yScale(yScale)
+        .updateAxes();
+  },
   drawLine(){
     const {svg, xScale, yScale, data} = this.props();
     this._.line = line()
@@ -62,6 +66,14 @@ const methods = {
       .xScale(xScale)
       .yScale(yScale)
       .selection(svg)
+      .draw();
+  },
+  updateLine(){
+    const {line, xScale, yScale, data} = this.props();
+    line
+      .data(data)
+      .xScale(xScale)
+      .yScale(yScale)
       .draw();
   },
   resizeLine(){
@@ -113,7 +125,10 @@ const methods = {
     this.resizeLine();
   },
   updateView(){
-
+    console.log("UPDATE VIEW");
+    this.setScales();
+    this.updateAxes();
+    this.updateLine();
   }
 };
 
