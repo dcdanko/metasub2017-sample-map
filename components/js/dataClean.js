@@ -16,6 +16,8 @@ const processSampleData = rawSamples => {
   const cleanSamples = rawSamples.map(d => {
     const cleanSample = Object.assign({}, d);
     cleanSample.time = new Date(cleanSample._submission_time);
+    cleanSample.lat = cleanSample._geolocation[0];
+    cleanSample.lon = cleanSample._geolocation[1];
     return cleanSample;
   });
   return cleanSamples;

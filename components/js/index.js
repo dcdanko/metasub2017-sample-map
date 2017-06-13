@@ -55,7 +55,12 @@ function draw({citiesData}){
   const sampleMap = map();
 
   citiesLayer
-    .data(summarizedCitiesData);
+    .view(mapState.view())
+    .radiusScale(summarizedCitiesData.radiusScale)
+    .onCityClick(d => {
+      mapState.update({view:{view: "city", city: d.id}});
+    })
+    .data(summarizedCitiesData.features);
 
   const d3Overlay = mapOverlay()
     .coordinateBounds([[90,-180],[-90,180]])
@@ -78,6 +83,8 @@ function draw({citiesData}){
 
   mapTimeline.draw();
 
+  console.log(summarizedCitiesData);
+
   mapState.registerCallback({
     width(){
       const {width} = this.props();
@@ -89,6 +96,36 @@ function draw({citiesData}){
       const {time} = this.props();
       mapTimeline.time(time)
         .updateTime();
+    },
+    view(){
+      const {view} = this.props();
+
+      citiesLayer.view(view);
+
+      if (view.view === "city"){
+        //GET MAX/MIN COORDINATES,  SET BOUNDS FROM THIS
+        //SET ZOOM TO THIS
+
+        sampleMap.fitBounds([[42.96, -78.94], [42.832, -78.782]]);
+
+        d3Overlay.coordinateBounds([[42.96, -78.94], [42.832, -78.782]])
+          .update();  
+
+        const selectedCitySamples = summarizedCitiesData.features.filter(d => d.id === view.city)[0].samples;
+        citiesLayer
+          .data(selectedCitySamples)
+          .draw();
+
+      }else if (view.view === "world"){
+        d3Overlay.coordinateBounds([[90,-180],[-90,180]])
+          .update();
+
+        citiesLayer
+          .data(summarizedCitiesData.features)
+          .draw();
+      }
+
+      
     }
   });
 
