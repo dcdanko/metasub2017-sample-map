@@ -16,17 +16,6 @@ const props = getObjectWithPropMethods([
 ]);
 
 const methods = {
-  draw(){
-    this.drawSVG();
-    this.setHeightFromRatio();
-    this.setScales();
-    this.drawAxes();
-    this.drawLine();
-
-    this.updateSize();
-
-    return this;
-  },
   drawSVG(){
     const {selection} = this.props();
     this._.svg = selection.append("svg")
@@ -83,7 +72,21 @@ const methods = {
       .updateSize();
   },
   drawSlider(){
-
+    const {svg, drag, time} = this.props();
+    console.log(time);
+    this._.slider = slider()
+      .currentValue(time)
+      .drag(drag)
+      .selection(svg)
+      .draw();
+  },
+  resizeSlider(){
+    const {slider, xScale, height, padding} = this.props();
+    slider
+      .padding(padding)
+      .height(height)
+      .xScale(xScale)
+      .setSliderSize();
   },
 
   resizeSVG(){
@@ -101,6 +104,7 @@ const methods = {
   resizeAxes(){
     const {axes, yScale, padding, xScale, height} = this.props();
     axes.padding(padding)
+      //WHY HEIGHT? SHOULD THIS BE PADDING? POSITION?
       .height(height)
       .yScale(yScale)
       .xScale(xScale)
@@ -117,18 +121,35 @@ const methods = {
     
 
   },
+  draw(){
+    this.drawSVG();
+    this.setHeightFromRatio();
+    this.setScales();
+    this.drawAxes();
+    this.drawLine();
+    this.drawSlider();
+
+    this.updateSize();
+
+    return this;
+  },
   updateSize(){
     this.setHeightFromRatio();
     this.setScales();
     this.resizeSVG();
     this.resizeAxes();
     this.resizeLine();
+    this.resizeSlider();
   },
   updateView(){
     console.log("UPDATE VIEW");
     this.setScales();
     this.updateAxes();
     this.updateLine();
+  },
+  updateTime(){
+    const {time} = this.props();
+    console.log(time);
   }
 };
 

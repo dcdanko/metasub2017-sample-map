@@ -37,16 +37,23 @@ function draw({citiesData}){
   const mapContainer = d3.select("#sample-map-2017")
     .styles({
       position: "relative",
+      // width:"100%",
+      // height:"80vh",
+      // background:"black"
+  });
+
+  d3.select("#map")
+    .styles({
       width:"100%",
       height:"80vh",
       background:"black"
-  });
+    })
 
   const mapState = state()
     .defaultValues({
       width: mapContainer.node().getBoundingClientRect().width,
       view: {view: "world"},
-      time: summarizedCitiesData.minTime
+      time: summarizedCitiesData.timeExtent[1]
     });
 
 
@@ -77,6 +84,7 @@ function draw({citiesData}){
   //send summarized line dataset to 
   const mapTimeline = timeline()
     .data(summarizedCitiesData.sampleFrequency)
+    .drag(newTime => mapState.update({time: newTime}))
     .xScale(summarizedCitiesData.xScale)
     .yScale(summarizedCitiesData.yScale)
     .width(mapState.width())
@@ -96,7 +104,8 @@ function draw({citiesData}){
     },
     time(){
       const {time} = this.props();
-      mapTimeline.time(time)
+      mapTimeline
+        .time(time)
         .updateTime();
 
     },
@@ -113,8 +122,6 @@ function draw({citiesData}){
         const lonExtent = d3.extent(selectedCity.samples, d => d.lon);
         const newBounds = [[latExtent[1], lonExtent[0]], [latExtent[0], lonExtent[1]]];
 
-        console.log(selectedCity);
-
         mapTimeline
           .data(selectedCity.sampleFrequency)
           .xScale(selectedCity.xScale)
@@ -125,6 +132,7 @@ function draw({citiesData}){
 
         d3Overlay
           .coordinateBounds(newBounds.map((d,i) => i === 0 ? [d[0] + svgPadding, d[1] - svgPadding] : [d[0] - svgPadding, d[1] + svgPadding]))
+          //WHY DO I NEED EXTRA UPDATE FOR SINGLE POINT?????
           .update();  
 
         

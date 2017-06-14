@@ -1,5 +1,5 @@
 const getMap = function(){
-  const map = L.map("sample-map-2017", {
+  const map = L.map("map", {
     zoomControl: false
   }).fitBounds([[-60,-180],[72,180]]); 
 
