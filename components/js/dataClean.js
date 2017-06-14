@@ -22,7 +22,9 @@ const processSampleData = rawSamples => {
   });
   return cleanSamples;
 };
-
+const getTimeExtent = points => d3
+          .extent(points, d => d.time)
+          .map((d,i) => i === 0 ? d3.timeHour.floor(d) : d3.timeHour.ceil(d));
 const getSampleFrequencyExtent = sampleFrequency => d3.extent(sampleFrequency, d => d.length);
 const getXScale = timeExtent => d3.scaleTime().domain(timeExtent);
 const getYScale = sampleFrequencyExtent => d3.scaleSqrt()
@@ -57,9 +59,7 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
 
       if (cityWithSamples.live){
         const processedSamples = processSampleData(samplesData[i]);
-        const timeExtent = d3
-          .extent(processedSamples, d => d.time)
-          .map((d,i) => i === 0 ? d3.timeHour.floor(d) : d3.timeHour.ceil(d));
+        const timeExtent = getTimeExtent(processedSamples);
         const xScale = getXScale(timeExtent);
         const sampleFrequency = getSampleFrequency({samples: processedSamples, xScale});
         const sampleFrequencyExtent = getSampleFrequencyExtent(sampleFrequency);
@@ -98,7 +98,7 @@ export const summarizeCitiesData = citiesData => {
     return samples;
   }, []);
 
-  const timeExtent = d3.extent(allSamples, d => d.time);
+  const timeExtent = getTimeExtent(allSamples);
   const xScale = getXScale(timeExtent);
   const sampleFrequency = getSampleFrequency({samples:allSamples, xScale, timeExtent});
   const sampleFrequencyExtent = getSampleFrequencyExtent(sampleFrequency);
