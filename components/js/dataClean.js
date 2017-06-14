@@ -98,7 +98,6 @@ const summarizeCity = features => {
 export const summarizeCitiesData = ({data, metadataFilter}) => {
 
   
-  console.log(metadataFilter.use);
   const summarizedCities = data.map(d => {
     if (d.live){
       const filteredFeatures = d.features.filter(feature => {
