@@ -140,7 +140,7 @@ function draw({citiesData}){
         sampleMap.fitBounds(newBounds);
         
         citiesLayer
-          .data(selectedCity.samples)
+          .data(selectedCity)
           .draw();
         //UPDATE TIME
       }else if (view.view === "world"){

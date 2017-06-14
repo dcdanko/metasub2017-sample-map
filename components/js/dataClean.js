@@ -24,17 +24,20 @@ const processSampleData = rawSamples => {
 };
 
 const getSampleFrequencyExtent = sampleFrequency => d3.extent(sampleFrequency, d => d.length);
-const getXScale = timeExtent => d3.scaleTime().domain(timeExtent.map(d => d3.timeHour(d)));
+const getXScale = timeExtent => d3.scaleTime().domain(timeExtent);
 const getYScale = sampleFrequencyExtent => d3.scaleSqrt()
   .domain(sampleFrequencyExtent);
 
-const getSampleFrequency = ({samples, xScale, timeExtent}) => {
+const getSampleFrequency = ({samples, xScale}) => {
 
-  const hourBins = d3.timeHours(d3.timeHour.offset(timeExtent[0], -1), d3.timeHour.offset(timeExtent[1], 1));
 
+  const hourBins = d3.timeHours(d3.timeHour.offset(xScale.domain()[0], -1), d3.timeHour.offset(xScale.domain()[1], 1));
+
+  // const hourBins = d3.timeHours(xScale.domain()[0], xScale.domain()[1]);
+  
   const histogram = d3.histogram()
     .value(d => d.time)
-    .domain(timeExtent)
+    .domain(d3.extent(hourBins))
     .thresholds(xScale.ticks(hourBins.length));
 
   return histogram(samples);
@@ -42,7 +45,7 @@ const getSampleFrequency = ({samples, xScale, timeExtent}) => {
 
 export const addSampleDataToCities = ({citiesData, samplesData}) => {
   const getCurrentSamples = function(time){
-    return this.samples.filter(d => d.time < time);
+    return this.samples.filter(d => d.time <= time);
   };
 
   const getCurrentSampleCount = function(time){
@@ -54,9 +57,11 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
 
       if (cityWithSamples.live){
         const processedSamples = processSampleData(samplesData[i]);
-        const timeExtent = d3.extent(processedSamples, d => d.time);
+        const timeExtent = d3
+          .extent(processedSamples, d => d.time)
+          .map((d,i) => i === 0 ? d3.timeHour.floor(d) : d3.timeHour.ceil(d));
         const xScale = getXScale(timeExtent);
-        const sampleFrequency = getSampleFrequency({samples: processedSamples, xScale, timeExtent});
+        const sampleFrequency = getSampleFrequency({samples: processedSamples, xScale});
         const sampleFrequencyExtent = getSampleFrequencyExtent(sampleFrequency);
         const yScale =getYScale(sampleFrequencyExtent);
 

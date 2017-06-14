@@ -25,20 +25,8 @@ const citiesLayer = mapOverlayLayer()
           cursor:"pointer"
         })
         .classed("map__city-circle--inactive", d => d.live ? false : true)
-        .on("click", onCityClick);
-    }else if (view.view === "city"){
-      this._.overlayCircles = group.selectAll(".map__city-circle")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attrs({
-          class: "map__city-circle map__circle",
-          r: 4,
-          cx: d => map.latLngToLayerPoint(d).x,
-          cy: d => map.latLngToLayerPoint(d).y,
-          cursor:"pointer"
-        })
-        .on("mouseover", d => {console.log(d);});
+        .on("click", d => d.live && d.samples.length > 0 ? onCityClick(d) : console.log(d));
+        // .on("mouseover", d => {console.log(d);});
     }
 
     this.updateTime();
@@ -47,16 +35,37 @@ const citiesLayer = mapOverlayLayer()
   });
 
 citiesLayer.updateTime = function(){
-    const {data, overlayCircles, radiusScale, view, time} = this.props();
+    const {view, time} = this.props();
     // console.log("UPDATE MAP TIME");
     // console.log(time);
     //DON'T RESET SCALE, JUST GET SAMPLE COUNT
 
     
     if (view.view === "world"){
+      const {overlayCircles, radiusScale} = this.props();
       overlayCircles.attrs({
         r: d => d.hasOwnProperty("sampleCount") ? radiusScale(d.getCurrentSampleCount(time)) : 2
       });
+    }else if (view.view === "city"){
+      console.log(time);
+      const {data, group, map} = this.props();
+      this._.overlayCircles = group.selectAll(".map__city-circle")
+        .data(data.getCurrentSamples(time));
+      const {overlayCircles} =this.props();
+
+      overlayCircles
+        .enter()
+        .append("circle")
+        .merge(overlayCircles)
+        .attrs({
+          class: "map__city-circle map__circle",
+          r: 4,
+          cx: d => map.latLngToLayerPoint(d).x,
+          cy: d => map.latLngToLayerPoint(d).y,
+          cursor:"pointer"
+        })
+        .on("mouseover", d => {console.log(d);});
+      overlayCircles.exit().remove();
     }
 
   };
