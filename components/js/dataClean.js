@@ -41,7 +41,13 @@ const getSampleFrequency = ({samples, xScale, timeExtent}) => {
 };
 
 export const addSampleDataToCities = ({citiesData, samplesData}) => {
+  const getCurrentSamples = function(time){
+    return this.samples.filter(d => d.time < time);
+  };
 
+  const getCurrentSampleCount = function(time){
+    return this.getCurrentSamples(time).length;
+  };
 
   const citiesDataWithSamples = citiesData.map((city, i) => {
       const cityWithSamples = Object.assign({}, city);
@@ -57,6 +63,8 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
         Object.assign(cityWithSamples, {
           samples: processedSamples,
           sampleCount: processedSamples.length,
+          getCurrentSamples,
+          getCurrentSampleCount,
           timeExtent,
           sampleFrequency,
           sampleFrequencyExtent,
