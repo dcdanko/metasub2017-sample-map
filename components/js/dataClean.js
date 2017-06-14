@@ -45,9 +45,24 @@ const getSampleFrequency = ({samples, xScale}) => {
   return histogram(samples);
 };
 
+const getSummary = points => {
+    const timeExtent = getTimeExtent(points);
+    const xScale = getXScale(timeExtent);
+    const sampleFrequency = getSampleFrequency({samples: points, xScale});
+    const sampleFrequencyExtent = getSampleFrequencyExtent(sampleFrequency);
+    const yScale =getYScale(sampleFrequencyExtent);
+    return {
+      timeExtent,
+      xScale,
+      yScale,
+      sampleFrequency,
+      sampleFrequencyExtent
+    };
+  };
+
 export const addSampleDataToCities = ({citiesData, samplesData}) => {
   const getCurrentSamples = function(time){
-    return this.samples.filter(d => d.time <= time);
+    return this.features.filter(d => d.time <= time);
   };
 
   const getCurrentSampleCount = function(time){
@@ -59,25 +74,15 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
 
       if (cityWithSamples.live){
         const processedSamples = processSampleData(samplesData[i]);
-        const timeExtent = getTimeExtent(processedSamples);
-        const xScale = getXScale(timeExtent);
-        const sampleFrequency = getSampleFrequency({samples: processedSamples, xScale});
-        const sampleFrequencyExtent = getSampleFrequencyExtent(sampleFrequency);
-        const yScale =getYScale(sampleFrequencyExtent);
-
-        Object.assign(cityWithSamples, {
-          samples: processedSamples,
-          sampleCount: processedSamples.length,
-          getCurrentSamples,
-          getCurrentSampleCount,
-          timeExtent,
-          sampleFrequency,
-          sampleFrequencyExtent,
-          xScale,
-          yScale
-        });
-
-        //GET SAMPLES PER HOUR, GET CURRENT SAMPLES
+        
+        Object.assign(cityWithSamples, 
+          {
+            features: processedSamples,
+            
+            getCurrentSamples,
+            getCurrentSampleCount
+          }
+        );
 
       }
 
@@ -86,33 +91,44 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
   return citiesDataWithSamples;
 };
 
+const summarizeCity = features => {
+  return Object.assign(getSummary(features), {sampleCount: features.length});
+};
+
+export const summarizeCitiesData = ({data, metadataFilter}) => {
+
+  
+  console.log(metadataFilter.use);
+  const summarizedCities = data.map(d => {
+    if (d.live){
+      const filteredFeatures = d.features.filter(feature => {
+        if (!metadataFilter.use){
+          return true;
+        }else{
+          return feature[metadataFilter.category] === metadataFilter.value;
+        }
+      });
+
+      const summarizedCity =Object.assign(summarizeCity(filteredFeatures),d,{features: filteredFeatures} );
+
+      return summarizedCity;
+    }else{
+      return d;
+    }
+  });
+
+  const sampleTotalsExtent = d3.extent(summarizedCities, d => d.sampleCount);
 
 
-export const summarizeCitiesData = citiesData => {
-
-  const sampleTotalsExtent = d3.extent(citiesData, d => d.sampleCount);
-
-
-  const allSamples = citiesData.filter(d => d.live).reduce((pv,cv) => {
-    const samples = [...pv, ...cv.samples];
+  const allSamples = summarizedCities.filter(d => d.live).reduce((pv,cv) => {
+    const samples = [...pv, ...cv.features];
     return samples;
   }, []);
 
-  const timeExtent = getTimeExtent(allSamples);
-  const xScale = getXScale(timeExtent);
-  const sampleFrequency = getSampleFrequency({samples:allSamples, xScale, timeExtent});
-  const sampleFrequencyExtent = getSampleFrequencyExtent(sampleFrequency);
-  const yScale =getYScale(sampleFrequencyExtent);
-
-  const summarizedCitiesData = {
-    features: citiesData,
-    timeExtent,
-    sampleFrequency,
-    sampleFrequencyExtent,
-    sampleTotalsExtent,
-    xScale,
-    yScale,
-    radiusScale: d3.scaleSqrt().domain(sampleTotalsExtent).range([4,50])
-  };
+  const summarizedCitiesData = Object.assign(getSummary(allSamples),{
+      features: summarizedCities,
+      sampleTotalsExtent,
+      radiusScale: d3.scaleSqrt().domain(sampleTotalsExtent).range([4,50])
+    });
   return summarizedCitiesData;
 };

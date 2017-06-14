@@ -30,7 +30,11 @@ loadData
   });
 
 function draw({citiesData}){
-  const summarizedCitiesData = summarizeCitiesData(citiesData);
+  const defaultMetadata = {category: "", value: "", use:false};
+
+  // const defaultMetadata = {category:"sampling_place", value:"seat", use:true};
+
+  const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
 
 
 
@@ -50,7 +54,7 @@ function draw({citiesData}){
     .defaultValues({
       width: mapContainer.node().getBoundingClientRect().width,
       view: {view: "world", city:""},
-      attribute: {category: "all", value: ""},
+      metadata: defaultMetadata,
       time: summarizedCitiesData.timeExtent[1]
     });
 
@@ -122,8 +126,8 @@ function draw({citiesData}){
       if (view.view === "city"){
         const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
 
-        const latExtent = d3.extent(selectedCity.samples, d => d.lat);
-        const lonExtent = d3.extent(selectedCity.samples, d => d.lon);
+        const latExtent = d3.extent(selectedCity.features, d => d.lat);
+        const lonExtent = d3.extent(selectedCity.features, d => d.lon);
         const newBounds = [[latExtent[1], lonExtent[0]], [latExtent[0], lonExtent[1]]];
 
         mapTimeline

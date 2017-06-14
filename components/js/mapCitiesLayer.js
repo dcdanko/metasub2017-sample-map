@@ -25,8 +25,8 @@ const citiesLayer = mapOverlayLayer()
           cursor:"pointer"
         })
         .classed("map__city-circle--inactive", d => d.live ? false : true)
-        .on("click", d => d.live && d.samples.length > 0 ? onCityClick(d) : console.log(d));
-        // .on("mouseover", d => {console.log(d);});
+        .on("click", d => d.live && d.features.length > 0 ? onCityClick(d) : console.log(d))
+        .on("mouseover", d => {console.log(d);});
     }
 
     this.updateTime();
@@ -47,7 +47,6 @@ citiesLayer.updateTime = function(){
         r: d => d.hasOwnProperty("sampleCount") ? radiusScale(d.getCurrentSampleCount(time)) : 2
       });
     }else if (view.view === "city"){
-      console.log(time);
       const {data, group, map} = this.props();
       this._.overlayCircles = group.selectAll(".map__city-circle")
         .data(data.getCurrentSamples(time));
