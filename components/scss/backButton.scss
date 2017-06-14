@@ -1,3 +1,5 @@
+@import "colors";
+
 .back-button{
   position: absolute;
   top: 25px;
@@ -7,4 +9,10 @@
   z-index: 1000;
   cursor:pointer;
   padding-left:20px;
+  background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_scale,w_150/v1497477836/metasub/Asset3.png");
+  background-size: 100% 100%;
+}
+
+.back-button:hover{
+  color: $green-fill--solid;
 }
