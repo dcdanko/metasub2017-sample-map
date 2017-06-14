@@ -1,5 +1,7 @@
+require("../scss/layout.scss");
 require("../scss/map.scss");
 require("../scss/timeline.scss");
+require("../scss/backButton.scss");
 //Promise polyfill
 import Promise from "promise-polyfill"; 
 if (!window.Promise) {
@@ -15,6 +17,7 @@ import map from "./map";
 import citiesLayer from "./mapCitiesLayer";
 import {summarizeCitiesData} from "./dataClean";
 import timeline from "./timeline";
+import button from "./backButton";
 
 
 
@@ -35,20 +38,12 @@ function draw({citiesData}){
   // const defaultMetadata = {category:"sampling_place", value:"seat", use:true};
 
   const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
+  const worldBounds = [[90,-180],[-90,180]];
+  console.log(summarizedCitiesData);
 
 
+  const mapContainer = d3.select("#sample-map-2017");
 
-  const mapContainer = d3.select("#sample-map-2017")
-    .styles({
-      position: "relative",
-  });
-
-  d3.select("#map")
-    .styles({
-      width:"100%",
-      height:"80vh",
-      background:"black"
-    });
 
   const mapState = state()
     .defaultValues({
@@ -68,15 +63,15 @@ function draw({citiesData}){
     .radiusScale(summarizedCitiesData.radiusScale)
     .time(mapState.time())
     .onCityClick(d => {
-      mapState.update({view:{view: "city", city: d.id}});
-      mapState.update({time: d.timeExtent[1]});
+      mapState.update({view:{view: "city", city: d.id}, time: d.timeExtent[1]});
+      //mapState.update();
     })
     .data(summarizedCitiesData.features);
 
 
 
   const d3Overlay = mapOverlay()
-    .coordinateBounds([[90,-180],[-90,180]])
+    .coordinateBounds(worldBounds)
     //.coordinateBounds([[42.96, -78.94], [42.832, -78.782]])
     .addVectorLayer(citiesLayer)
     .addTo(sampleMap);
@@ -96,7 +91,12 @@ function draw({citiesData}){
     .selection(mapContainer)
     .draw();
 
-  console.log(summarizedCitiesData);
+  const backButton = button()
+    .selection(mapContainer)
+    .onClick(() => mapState.update({
+      view:{view: "world"},
+      time: summarizedCitiesData.timeExtent[1]
+    }));
 
 
   mapState.registerCallback({
@@ -122,6 +122,7 @@ function draw({citiesData}){
       const svgPadding = .1;
 
       citiesLayer.view(view);
+      //DEFINE DATA SUBSET HERE?
 
       if (view.view === "city"){
         const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
@@ -136,8 +137,6 @@ function draw({citiesData}){
           .yScale(selectedCity.yScale)
           .updateView();
 
-
-
         d3Overlay
           .coordinateBounds(newBounds.map((d,i) => i === 0 ? [d[0] + svgPadding, d[1] - svgPadding] : [d[0] - svgPadding, d[1] + svgPadding]));
 
@@ -146,15 +145,26 @@ function draw({citiesData}){
         citiesLayer
           .data(selectedCity)
           .draw();
-        //UPDATE TIME
+
+        backButton.draw();
       }else if (view.view === "world"){
-        d3Overlay.coordinateBounds([[90,-180],[-90,180]])
+        d3Overlay
+          .coordinateBounds(worldBounds)
           .update();
 
         citiesLayer
           .data(summarizedCitiesData.features)
           .draw();
-        //UPDATE TIME
+
+        mapTimeline
+          .data(summarizedCitiesData.sampleFrequency)
+          .xScale(summarizedCitiesData.xScale)
+          .yScale(summarizedCitiesData.yScale)
+          .updateView();
+
+        sampleMap.fitBounds(worldBounds);
+
+        backButton.remove();
       }
     }
   });
