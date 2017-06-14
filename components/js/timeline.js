@@ -69,7 +69,7 @@ const methods = {
     const {line, yScale, xScale} = this.props();
     line.xScale(xScale)
       .yScale(yScale)
-      .updateSize();
+      .resize();
   },
   drawSlider(){
     const {svg, drag, time} = this.props();
