@@ -37,9 +37,6 @@ function draw({citiesData}){
   const mapContainer = d3.select("#sample-map-2017")
     .styles({
       position: "relative",
-      // width:"100%",
-      // height:"80vh",
-      // background:"black"
   });
 
   d3.select("#map")
@@ -47,12 +44,13 @@ function draw({citiesData}){
       width:"100%",
       height:"80vh",
       background:"black"
-    })
+    });
 
   const mapState = state()
     .defaultValues({
       width: mapContainer.node().getBoundingClientRect().width,
-      view: {view: "world"},
+      view: {view: "world", city:""},
+      attribute: {category: "all", value: ""},
       time: summarizedCitiesData.timeExtent[1]
     });
 
@@ -66,6 +64,7 @@ function draw({citiesData}){
     .radiusScale(summarizedCitiesData.radiusScale)
     .onCityClick(d => {
       mapState.update({view:{view: "city", city: d.id}});
+      mapState.update({time: d.timeExtent[1]});
     })
     .data(summarizedCitiesData.features);
 
@@ -128,13 +127,12 @@ function draw({citiesData}){
           .yScale(selectedCity.yScale)
           .updateView();
 
-        sampleMap.fitBounds(newBounds);
+
 
         d3Overlay
-          .coordinateBounds(newBounds.map((d,i) => i === 0 ? [d[0] + svgPadding, d[1] - svgPadding] : [d[0] - svgPadding, d[1] + svgPadding]))
-          //WHY DO I NEED EXTRA UPDATE FOR SINGLE POINT?????
-          .update();  
+          .coordinateBounds(newBounds.map((d,i) => i === 0 ? [d[0] + svgPadding, d[1] - svgPadding] : [d[0] - svgPadding, d[1] + svgPadding]));
 
+        sampleMap.fitBounds(newBounds);
         
         citiesLayer
           .data(selectedCity.samples)

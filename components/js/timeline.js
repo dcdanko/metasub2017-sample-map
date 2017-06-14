@@ -73,13 +73,19 @@ const methods = {
   },
   drawSlider(){
     const {svg, drag, time} = this.props();
-    console.log(time);
     this._.slider = slider()
       .currentValue(time)
       .drag(drag)
       .selection(svg)
       .draw();
   },
+  updateSliderTime(){
+    const {slider, time} =this.props();
+    slider
+      .currentValue(time)
+      .updateCurrentValue();
+  },
+
   resizeSlider(){
     const {slider, xScale, height, padding} = this.props();
     slider
@@ -98,7 +104,7 @@ const methods = {
   },
   setScales(){
     const {xScale, yScale, height, width, padding} = this.props();
-    xScale.range([padding.left, width - padding.right]);
+    xScale.range([padding.left, width - padding.right]).clamp(true);
     yScale.range([height - padding.bottom, padding.top]);
   },
   resizeAxes(){
@@ -146,10 +152,10 @@ const methods = {
     this.setScales();
     this.updateAxes();
     this.updateLine();
+    this.resizeSlider();
   },
   updateTime(){
-    const {time} = this.props();
-    console.log(time);
+    this.updateSliderTime();
   }
 };
 
