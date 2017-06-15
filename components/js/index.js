@@ -22,23 +22,19 @@ import button from "./backButton";
 
 
 
-loadData
-  .then(citiesDataWithSamples => {
-    console.log("DATA LOADED");
-    draw({citiesData: citiesDataWithSamples});
-  })
-  .catch(error => {
-    console.log(error);
-    throw error;
-  });
+loadData(draw);
+  
 
-function draw({citiesData}){
+
+function draw({citiesData, metaData}){
+  console.log(metaData);
   const defaultMetadata = {category: "", value: "", use:false};
 
   // const defaultMetadata = {category:"sampling_place", value:"seat", use:true};
 
   const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
-  const worldBounds = [[90,-180],[-90,180]];
+  const worldBounds = [[90,-180],[-80,180]];
+  //const worldBounds = [[80,-180],[-80,180]];
   console.log(summarizedCitiesData);
 
 
@@ -56,7 +52,7 @@ function draw({citiesData}){
 
 
   //extract mapContainer id from mapContainer.node(), send to map module as argument
-  const sampleMap = map();
+  const sampleMap = map(worldBounds);
 
   citiesLayer
     .view(mapState.view())

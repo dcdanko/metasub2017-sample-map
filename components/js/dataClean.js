@@ -131,3 +131,13 @@ export const summarizeCitiesData = ({data, metadataFilter}) => {
     });
   return summarizedCitiesData;
 };
+
+export const formatMetadataMenu = rawMetaData => {
+  const uniqueCategories = d3.set(rawMetaData.filter(d => d.category_label !== "")
+    .map(d => d.category_label)).values();
+  const processedMetadata = uniqueCategories.reduce((pv,cv) => {
+    pv[cv] = rawMetaData.filter(d => d.category_label === cv);
+    return pv;
+  }, {});
+  return processedMetadata;
+};

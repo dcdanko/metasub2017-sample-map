@@ -1,0 +1,76 @@
+category,type,type_label,location_type,category_label
+sampling_type,surface,Surface,,Sampling Type
+sampling_type,air,Air,,Sampling Type
+sampling_type,water,Water,,Sampling Type
+sampling_type,soil,Soil,,Sampling Type
+location_type,station,Subway/Train station,,Location Type
+location_type,busstop,Bus Stop,,Location Type
+location_type,office,Office,,Location Type
+location_type,university,University Campus,,Location Type
+location_type,school,School,,Location Type
+location_type,airport,Airport,,Location Type
+location_type,residential,Residential area,,Location Type
+location_type,vehicle,Vehicle (bus/car/plane),,Location Type
+location_type,hospital,Hospital,,Location Type
+location_type,animal_related,Animal related location,,Location Type
+location_type,water_related,Water related location,,Location Type
+location_type,soil_related,Soil related location,,Location Type
+location_type,lab_control,Lab control,,Location Type
+location_type,park,Park,,Location Type
+location,station1,Some Station,station,
+location,station2,Another Station,station,
+location,school1,Some School,school,
+location,school2,Another School,school,
+location,office1,Some Office,office,
+location,office2,Another Office,office,
+location,airport1,Airport,airport,
+location,bath,Public bath,water_related,
+location,field,Field,soil_related,
+setting,urban,Urban,,Setting
+setting,rural,Rural,,Setting
+setting,suburban,Suburban,,Setting
+station_specific,station,Station/busstop,,
+station_specific,car,Car/bus/cabin,,
+station_specific,interchange,Bus/subway interchange,,
+sampling_place,bell,Bell,,Sampling Place
+sampling_place,bench,Bench,,Sampling Place
+sampling_place,entrance_door,Entrance door,,Sampling Place
+sampling_place,escalator_handrail,Escalator handrail,,Sampling Place
+sampling_place,floor,Floor,,Sampling Place
+sampling_place,foot_basin,Foot basin,,Sampling Place
+sampling_place,gargabe_can,Garbage can,,Sampling Place
+sampling_place,ground,Ground,,Sampling Place
+sampling_place,handrail,Handrail,,Sampling Place
+sampling_place,horiz_pole,Horizontal pole,,Sampling Place
+sampling_place,infoboard,Information board,,Sampling Place
+sampling_place,lift_buttons,Lift Buttons,,Sampling Place
+sampling_place,ocean,Ocean,,Sampling Place
+sampling_place,pedestrian_crossing_button,Pedestrian Crossing button,,Sampling Place
+sampling_place,playground,Playground,,Sampling Place
+sampling_place,river,River,,Sampling Place
+sampling_place,seat,Seat,,Sampling Place
+sampling_place,sensor,Card sensor area,,Sampling Place
+sampling_place,table,Table,,Sampling Place
+sampling_place,ticket_machine,Ticket machine,,Sampling Place
+sampling_place,touchscreen,Touchscreen,,Sampling Place
+sampling_place,vert_pole,Vertical pole,,Sampling Place
+sampling_place,other,Other,,Sampling Place
+surface_material,metal,Metal,,Surface Material
+surface_material,metal_plastic,Metal/Plastic,,Surface Material
+surface_material,painted_metal,Painted metal,,Surface Material
+surface_material,pvc,PVC,,Surface Material
+surface_material,wood,Wood,,Surface Material
+surface_material,plastic,Plastic,,Surface Material
+surface_material,rubber,Rubber,,Surface Material
+surface_material,granite,Granite,,Surface Material
+surface_material,concrete,Concrete,,Surface Material
+surface_material,polyester,Polyester,,Surface Material
+surface_material,other,Other,,Surface Material
+temp_measure,fahrenheit,Fahrenheit,,
+temp_measure,celcius,Celcius,,
+humidity_type,abs_humidity,Absolute humidity,,
+humidity_type,rel_humidity,Relative humidity,,
+ground_level,under_ground,Underground (or underwater),,Ground Level
+ground_level,above_ground_open,Aboveground (open area),,Ground Level
+ground_level,above_ground_closed,Aboveground (closed area),,Ground Level
+ground_level,above_ground_mixed,Aboveground (mixed area),,Ground Level
