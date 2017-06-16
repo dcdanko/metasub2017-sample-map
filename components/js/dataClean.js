@@ -33,7 +33,9 @@ const getYScale = sampleFrequencyExtent => d3.scaleSqrt()
 const getSampleFrequency = ({samples, xScale}) => {
 
 
-  const hourBins = d3.timeHours(d3.timeHour.offset(xScale.domain()[0], -1), d3.timeHour.offset(xScale.domain()[1], 1));
+  const hourBins = d3.timeHours(
+    d3.timeHour.offset(xScale.domain()[0], -1), 
+    d3.timeHour.offset(xScale.domain()[1], 1));
 
   // const hourBins = d3.timeHours(xScale.domain()[0], xScale.domain()[1]);
   

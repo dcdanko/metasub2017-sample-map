@@ -57,6 +57,7 @@ function draw({citiesData, metaData}){
   citiesLayer
     .view(mapState.view())
     .radiusScale(summarizedCitiesData.radiusScale)
+    .startTime(summarizedCitiesData.timeExtent[0])
     .time(mapState.time())
     .onCityClick(d => {
       mapState.update({view:{view: "city", city: d.id}, time: d.timeExtent[1]});

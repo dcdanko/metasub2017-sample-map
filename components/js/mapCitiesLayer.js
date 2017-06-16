@@ -8,26 +8,25 @@ const citiesLayer = mapOverlayLayer()
   .type("Point")
   .name("cities")
   .render("Vector")
-  .addPropMethods(["onCityClick", "view","time", "radiusScale"])
+  .addPropMethods(["onCityClick", "view","time", "startTime", "radiusScale"])
   .draw(function(){
-    const {data, group, view, map,  onCityClick} = this.props();
+    const {data, group, view, map, onCityClick} = this.props();
 
     group.selectAll(".map__circle").remove();
 
     if (view.view === "world"){
       this._.overlayCircles = group.selectAll(".map__city-circle")
-        .data(data)
+        .data(data.filter(d => d.live))
         .enter()
         .append("circle")
         //make setAttributes function to avoid code duplication
         .attrs({
           class: "map__city-circle map__circle",
-          //r: d => d.hasOwnProperty("sampleCount") ? radiusScale(d.sampleCount) : 2,
           cx: d => map.latLngToLayerPoint(d).x,
           cy: d => map.latLngToLayerPoint(d).y,
           cursor:"pointer"
         })
-        .classed("map__city-circle--inactive", d => d.live ? false : true)
+        .classed("map__city-circle--inactive", false)
         .on("click", d => {
           mapTooltip.remove();
           d.live && d.features.length > 0 ? onCityClick(d) : console.log(d);
@@ -39,6 +38,14 @@ const citiesLayer = mapOverlayLayer()
         .on("mouseout", () => {
           mapTooltip.remove();
         });
+      this._.inactiveCircles = group.selectAll(".map__city-circle--inactive")
+        .data(data.filter(d => !d.live))
+        .enter()
+        .append("circle")
+        .attrs({
+          class: "map__city-circle--inactive map__circle",
+          r:2
+        });
     }
 
     this.updateTime();
@@ -49,23 +56,19 @@ const citiesLayer = mapOverlayLayer()
 const formatTime =  d3.timeFormat("%m/%d/%Y");
 
 citiesLayer.updateTime = function(){
-    const {view, time} = this.props();
-    // console.log("UPDATE MAP TIME");
-    // console.log(time);
-    //DON'T RESET SCALE, JUST GET SAMPLE COUNT
-
+    const {view, time, startTime} = this.props();
     
     if (view.view === "world"){
       const {overlayCircles, radiusScale} = this.props();
       overlayCircles.attrs({
-        r: d => d.hasOwnProperty("sampleCount") ? radiusScale(d.getCurrentSampleCount(time)) : 2
+        r: d => radiusScale(d.getCurrentSampleCount(time))
       })
       .on("mouseover", (d) => {
           console.log(d);
           mapTooltip.position(getPositionOnPage())
             .text([
               ["Location: ", `${d.name_full}`],
-              ["Time Period: ", `${formatTime(d.timeExtent[0])} - ${formatTime(time)}`],
+              ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
               ["Samples Taken: ", `${d.getCurrentSampleCount(time)}`]
             ])
             .draw();
@@ -87,7 +90,21 @@ citiesLayer.updateTime = function(){
           cy: d => map.latLngToLayerPoint(d).y,
           cursor:"pointer"
         })
-        .on("mouseover", d => {console.log(d);});
+        .on("mouseover", d => {
+          mapTooltip.position(getPositionOnPage())
+            .text([
+              ["Sampling Place: ", `${d.sampling_place}`],
+              ["Time Submitted: ", `${formatTime(d.time)}`]
+            ])
+            .draw();
+        })
+        .on("mousemove", () => {
+          mapTooltip.position(getPositionOnPage()).update();
+        })
+        .on("mouseout", () => {
+          mapTooltip.remove();
+        });
+
       overlayCircles.exit().remove();
     }
 
