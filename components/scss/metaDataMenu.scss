@@ -1,0 +1,17 @@
+@import "variables";
+
+.menu__container{
+  position:absolute;
+  top:25px;
+  left:25px;
+  z-index:1000;
+}
+
+.menu__button{
+  cursor:pointer;
+  color:white;
+}
+
+.menu__button:hover, .menu__button--active{
+  color: $green-fill--solid;
+}

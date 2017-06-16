@@ -97,16 +97,16 @@ const summarizeCity = features => {
   return Object.assign(getSummary(features), {sampleCount: features.length});
 };
 
-export const summarizeCitiesData = ({data, metadataFilter}) => {
+export const summarizeCitiesData = ({data, metaDataFilter}) => {
 
   
   const summarizedCities = data.map(d => {
     if (d.live){
       const filteredFeatures = d.features.filter(feature => {
-        if (!metadataFilter.use){
+        if (!metaDataFilter.use){
           return true;
         }else{
-          return feature[metadataFilter.category] === metadataFilter.value;
+          return feature[metaDataFilter.category] === metaDataFilter.value;
         }
       });
 

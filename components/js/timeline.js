@@ -7,6 +7,7 @@ const props = getObjectWithPropMethods([
   "selection",
   "data",
   "width",
+  "position",
   "time",
   "drag",
   "xValue",

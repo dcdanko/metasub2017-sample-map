@@ -2,6 +2,7 @@ require("../scss/layout.scss");
 require("../scss/map.scss");
 require("../scss/timeline.scss");
 require("../scss/backButton.scss");
+require("../scss/metaDataMenu.scss");
 //Promise polyfill
 import Promise from "promise-polyfill"; 
 if (!window.Promise) {
@@ -17,6 +18,7 @@ import map from "./map";
 import citiesLayer from "./mapCitiesLayer";
 import {summarizeCitiesData} from "./dataClean";
 import timeline from "./timeline";
+import menu from "./metaDataMenu";
 import button from "./backButton";
 
 
@@ -27,15 +29,15 @@ loadData(draw);
 
 
 function draw({citiesData, metaData}){
-  console.log(metaData);
+
   const defaultMetadata = {category: "", value: "", use:false};
 
   // const defaultMetadata = {category:"sampling_place", value:"seat", use:true};
 
-  const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
+  const summarizedCitiesData = summarizeCitiesData({data:citiesData, metaDataFilter:defaultMetadata});
   const worldBounds = [[90,-180],[-80,180]];
   //const worldBounds = [[80,-180],[-80,180]];
-  console.log(summarizedCitiesData);
+
 
 
   const mapContainer = d3.select("#sample-map-2017");
@@ -45,7 +47,7 @@ function draw({citiesData, metaData}){
     .defaultValues({
       width: mapContainer.node().getBoundingClientRect().width,
       view: {view: "world", city:""},
-      metadata: defaultMetadata,
+      metaDataFilter: defaultMetadata,
       time: summarizedCitiesData.timeExtent[1]
     });
 
@@ -86,6 +88,11 @@ function draw({citiesData, metaData}){
     .width(mapState.width())
     .time(mapState.time())
     .selection(mapContainer)
+    .draw();
+
+  const metaDataMenu = menu()
+    .selection(mapContainer)
+    .data(metaData)
     .draw();
 
   const backButton = button()
