@@ -29,15 +29,15 @@ loadData(draw);
 
 
 function draw({citiesData, metadata}){
-
-  console.log(metadata);
-
-  const defaultmetadata = {category: "", type: "", use:false};
-
-  // const defaultmetadata = {category:"sampling_place", value:"seat", use:true};
-
-  const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultmetadata});
   const worldBounds = [[90,-180],[-80,180]];
+  const defaultMetadata = {category: "", type: ""};
+  const defaultMetadata2 = {category:"sampling_place", type:"seat"};
+
+  const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
+
+  // summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata2});
+  // summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
+  
   //const worldBounds = [[80,-180],[-80,180]];
 
 
@@ -47,9 +47,10 @@ function draw({citiesData, metadata}){
 
   const mapState = state()
     .defaultValues({
+      data: summarizedCitiesData,
       width: mapContainer.node().getBoundingClientRect().width,
       view: {view: "world", city:""},
-      metadataFilter: defaultmetadata,
+      metadataFilter: defaultMetadata,
       time: summarizedCitiesData.timeExtent[1]
     });
 
@@ -64,7 +65,11 @@ function draw({citiesData, metadata}){
     .startTime(summarizedCitiesData.timeExtent[0])
     .time(mapState.time())
     .onCityClick(d => {
-      mapState.update({view:{view: "city", city: d.id}, time: d.timeExtent[1]});
+      mapState.update({
+        metadataFilter: defaultMetadata,
+        view:{view: "city", city: d.id}, 
+        time: d.timeExtent[1]
+      });
       //mapState.update();
     })
     .data(summarizedCitiesData.features);
@@ -91,21 +96,36 @@ function draw({citiesData, metadata}){
     .time(mapState.time())
     .selection(mapContainer)
     .draw();
+  console.log(summarizedCitiesData);
 
   const metadataMenu = menu()
+    .currentFeatures(summarizedCitiesData.allSamples)
     .selection(mapContainer)
     .data(metadata)
+
+    .onClick(newMetadataFilter => mapState.update({
+      //data: summarizeCitiesData({data:citiesData, metadataFilter:newMetadataFilter}),
+        metadataFilter:newMetadataFilter}))
     .draw();
 
   const backButton = button()
     .selection(mapContainer)
     .onClick(() => mapState.update({
+      metadataFilter: defaultMetadata,
       view:{view: "world"},
       time: summarizedCitiesData.timeExtent[1]
     }));
 
 
   mapState.registerCallback({
+    metadataFilter(){
+      const {metadataFilter} = this.props();
+
+      console.log(metadataFilter);
+      
+      metadataMenu
+        .metadataFilter(metadataFilter);
+    },
     width(){
       const {width} = this.props();
       mapTimeline
@@ -124,14 +144,14 @@ function draw({citiesData, metadata}){
 
     },
     view(){
-      const {view} = this.props();
+      const {view, data} = this.props();
       const svgPadding = .1;
 
       citiesLayer.view(view);
       //DEFINE DATA SUBSET HERE?
 
       if (view.view === "city"){
-        const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
+        const selectedCity = data.features.filter(d => d.id === view.city)[0];
 
         const latExtent = d3.extent(selectedCity.features, d => d.lat);
         const lonExtent = d3.extent(selectedCity.features, d => d.lon);
@@ -153,25 +173,30 @@ function draw({citiesData, metadata}){
           .draw();
 
         backButton.draw();
+
+        metadataMenu.currentFeatures(selectedCity.features);
       }else if (view.view === "world"){
         d3Overlay
           .coordinateBounds(worldBounds)
           .update();
 
         citiesLayer
-          .data(summarizedCitiesData.features)
+          .data(data.features)
           .draw();
 
         mapTimeline
-          .data(summarizedCitiesData.sampleFrequency)
-          .xScale(summarizedCitiesData.xScale)
-          .yScale(summarizedCitiesData.yScale)
+          .data(data.sampleFrequency)
+          .xScale(data.xScale)
+          .yScale(data.yScale)
           .updateView();
 
         sampleMap.fitBounds(worldBounds);
 
         backButton.remove();
+
+        metadataMenu.currentFeatures(data.allSamples);
       }
+      metadataMenu.updateView();
     }
   });
   //mapState.update({view:{view: "city", city: "104862"}});

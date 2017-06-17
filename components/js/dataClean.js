@@ -99,14 +99,14 @@ const summarizeCity = features => {
 
 export const summarizeCitiesData = ({data, metadataFilter}) => {
 
-  
+
   const summarizedCities = data.map(d => {
     if (d.live){
       const filteredFeatures = d.features.filter(feature => {
-        if (!metadataFilter.use){
+        if (metadataFilter.category === ""){
           return true;
         }else{
-          return feature[metadataFilter.category] === metadataFilter.value;
+          return feature[metadataFilter.category] === metadataFilter.type;
         }
       });
 
@@ -126,9 +126,11 @@ export const summarizeCitiesData = ({data, metadataFilter}) => {
     return samples;
   }, []);
 
+
+
   const summarizedCitiesData = Object.assign(getSummary(allSamples),{
       features: summarizedCities,
-      sampleTotalsExtent,
+      allSamples: allSamples,
       radiusScale: d3.scaleSqrt().domain(sampleTotalsExtent).range([4,50])
     });
   return summarizedCitiesData;

@@ -3,9 +3,11 @@ import {getObjectWithPropMethods} from "./visualization-components/utils";
 const props = getObjectWithPropMethods([
   "selection",
   "data",
+  //filteredData
   "position",
   "onClick",
-  "metadataFilter"
+  "metadataFilter",
+  "currentFeatures"
 ]);
 
 const methods = {
@@ -41,6 +43,7 @@ const methods = {
       .text("Filter Map by Metadata");
   },
   drawCategories(){
+
     const {menuContainer, data} = this.props();
 
     this._.menuRows = menuContainer
@@ -84,10 +87,16 @@ const methods = {
     menuContainer.selectAll(".menu__types-container").remove();
   },
   drawTypes(){
-    const {menuContainer, category, data, onClick} = this.props();
+    const {menuContainer, currentFeatures, category, data, onClick} = this.props();
     this.removeTypes();
 
-    const types = data.filter(d => d.category === category)[0].features;
+    //filter out all metadata types that are not present in current sample set
+    const currentTypes = currentFeatures.map(d => d[category]);
+
+    const types = data
+      .filter(d => d.category === category)[0]
+      .features
+      .filter(d => currentTypes.includes(d.type));
 
     this._.typesContainer = menuContainer
       .select(`.menu__row-container--${category}`)
@@ -104,7 +113,10 @@ const methods = {
       .attrs({
         class: "menu__types-row"
       })
-      .text(d => d.type_label);
+      .text(d => d.type_label)
+      .on("click", d => {
+        onClick({category: d.category, type: d.type});
+      });
   },
   updateOpenStatus(){
     const {menuRows, menuContainer, isOpen} = this.props();
@@ -115,8 +127,13 @@ const methods = {
     const {menuRows, category} = this.props();
     menuRows.classed("menu__row--active", d => d.category === category ? true : false);
   },
-  updateMetadata(){
-
+  updateView(){
+    //reset metadata
+    const {metadataFilter} =this.props();
+    this._.category = metadataFilter.category;
+    this._.type = metadataFilter.type;
+    this.removeTypes();
+    this.updateCategory();
   }
 };
 
@@ -126,6 +143,7 @@ const metadataMenu = () => {
       padding: {left: 15, bottom:15, right:15, top:15},
       width:500,
       category: "",
+      type: "",
       isOpen: true
     }
   };
