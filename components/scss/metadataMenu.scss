@@ -1,0 +1,86 @@
+@import "variables";
+
+.menu__title-container{
+  position:absolute;
+  top:$top-offset;
+  left:$side-offset;
+  z-index:1000;
+}
+
+.menu__container{
+  position:absolute;
+  top:$top-offset + 30;
+  left:$side-offset;
+  z-index:1000;
+  -webkit-transition: opacity 250ms;
+  -moz-transition: opacity 250ms;
+  -o-transition: opacity 250ms;
+  transition: opacity 250ms;
+}
+
+.menu__title{
+  color:white;
+  font-size:$header-size;
+  padding-left:35px;
+  background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/v1497477836/metasub/Asset1.png");
+  background-size: contain;
+  background-repeat:no-repeat;
+  cursor:pointer;
+}
+
+
+
+.menu__row{
+  margin-top:10px;
+  margin-left:25px;
+  padding-left:25px;
+  background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_90/v1497477836/metasub/Asset5.png");
+  background-size: contain;
+  background-repeat:no-repeat;
+  cursor:pointer;
+  color:white;
+  
+}
+
+.menu__types-container{
+  color:white;
+  margin-top:10px;
+  margin-left:65px;
+  font-size:14px;
+}
+
+.menu__row-container{
+  max-height:300px;
+  padding-right:15px;
+  overflow-y:auto;
+}
+
+.menu__types-row{
+  cursor:pointer;
+  margin-bottom:5px;
+}
+
+.menu__row:hover, .menu__title:hover, .menu__types-row:hover, .menu__row--active, .menu__types-row--active{
+  color: $green-fill--solid;
+}
+
+.menu__row--active{
+  background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497477836/metasub/Asset4.png");
+}
+
+.menu__row--off{
+  opacity:0;
+  pointer-events:none;
+}
+
+.menu__container--off{
+  opacity:0;
+  pointer-events:none;
+}
+
+@media (max-width: 575px) {
+  .menu__container{
+    pointer-events:none;
+    visibility: hidden;
+  }
+}

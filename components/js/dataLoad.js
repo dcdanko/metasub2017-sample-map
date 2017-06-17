@@ -1,4 +1,4 @@
-import {processCitiesData, addSampleDataToCities, formatMetadataMenu} from "./dataClean";
+import {processCitiesData, addSampleDataToCities, formatmetadataMenu} from "./dataClean";
 
 const loadData = callback => {
   new Promise((resolve, reject) => {
@@ -37,7 +37,7 @@ const loadData = callback => {
   })
   .then(citiesDataWithSamples => {
     console.log("DATA LOADED");
-    loadMetadata({citiesData: citiesDataWithSamples, callback});
+    loadmetadata({citiesData: citiesDataWithSamples, callback});
   })
   .catch(error => {
     console.log(error);
@@ -46,13 +46,13 @@ const loadData = callback => {
 };
 
 
-function loadMetadata({citiesData, callback}){
-  d3.csv("data/metadata.csv", (error, metaData) =>{
+function loadmetadata({citiesData, callback}){
+  d3.csv("data/metadata.csv", (error, metadata) =>{
     if (error){
       console.log(error);
       throw error;
     }else{
-      callback({citiesData, metaData: formatMetadataMenu(metaData)});
+      callback({citiesData, metadata: formatmetadataMenu(metadata)});
     }
   });
 }

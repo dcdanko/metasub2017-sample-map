@@ -97,16 +97,16 @@ const summarizeCity = features => {
   return Object.assign(getSummary(features), {sampleCount: features.length});
 };
 
-export const summarizeCitiesData = ({data, metaDataFilter}) => {
+export const summarizeCitiesData = ({data, metadataFilter}) => {
 
   
   const summarizedCities = data.map(d => {
     if (d.live){
       const filteredFeatures = d.features.filter(feature => {
-        if (!metaDataFilter.use){
+        if (!metadataFilter.use){
           return true;
         }else{
-          return feature[metaDataFilter.category] === metaDataFilter.value;
+          return feature[metadataFilter.category] === metadataFilter.value;
         }
       });
 
@@ -134,18 +134,18 @@ export const summarizeCitiesData = ({data, metaDataFilter}) => {
   return summarizedCitiesData;
 };
 
-export const formatMetadataMenu = rawMetaData => {
-  const uniqueCategories = d3.set(rawMetaData.filter(d => d.category !== "")
+export const formatmetadataMenu = rawmetadata => {
+  const uniqueCategories = d3.set(rawmetadata.filter(d => d.category !== "")
     .map(d => d.category)).values();
-  // const processedMetadata = uniqueCategories.reduce((pv,cv) => {
-  //   pv[cv] = rawMetaData.filter(d => d.category === cv);
+  // const processedmetadata = uniqueCategories.reduce((pv,cv) => {
+  //   pv[cv] = rawmetadata.filter(d => d.category === cv);
   //   return pv;
   // }, {});
-  const processedMetadata = uniqueCategories.map(d => ({
+  const processedmetadata = uniqueCategories.map(d => ({
       category: d,
-      category_label: rawMetaData.filter(dd => dd.category === d)[0].category_label,
-      features: rawMetaData.filter(dd => dd.category === d)
-    }));
+      category_label: rawmetadata.filter(dd => dd.category === d)[0].category_label,
+      features: rawmetadata.filter(dd => dd.category === d)
+    })).filter(d => d.category_label !== "");
 
-  return processedMetadata;
+  return processedmetadata;
 };
