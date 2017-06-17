@@ -16,27 +16,26 @@ const methods = {
     this._.menuContainer = selection.append("div")
       .attrs({
         class:"menu__container"
-      })
-      .styles({
-        // left: `${position.left}px`,
-        // top: `${position.top}px`
       });
 
-
+    this.drawTitle();
     this.drawCategories();
 
     return this;
+  },
+  drawTitle(){
+    const {menuContainer} = this.props();
   },
   drawCategories(){
     const {menuContainer, data} = this.props();
     console.log(data);
     this._.menuRows = this._.menuContainer
       .selectAll(".menu__row")
-      .data(Object.keys(data))
+      .data(data)
       .enter()
       .append("div")
       .attrs({
-        class: "menu__row"
+        class: d => `menu__row menu__row--${d}`
       });
 
     this._.menuButtons = this._.menuRows
@@ -44,7 +43,7 @@ const methods = {
       .attrs({
         class: "menu__button"
       })
-      .text(d => d);
+      .text(d => d.category_label);
   },
   drawTypes(){
 

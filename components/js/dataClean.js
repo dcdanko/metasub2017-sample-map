@@ -135,11 +135,17 @@ export const summarizeCitiesData = ({data, metaDataFilter}) => {
 };
 
 export const formatMetadataMenu = rawMetaData => {
-  const uniqueCategories = d3.set(rawMetaData.filter(d => d.category_label !== "")
-    .map(d => d.category_label)).values();
-  const processedMetadata = uniqueCategories.reduce((pv,cv) => {
-    pv[cv] = rawMetaData.filter(d => d.category_label === cv);
-    return pv;
-  }, {});
+  const uniqueCategories = d3.set(rawMetaData.filter(d => d.category !== "")
+    .map(d => d.category)).values();
+  // const processedMetadata = uniqueCategories.reduce((pv,cv) => {
+  //   pv[cv] = rawMetaData.filter(d => d.category === cv);
+  //   return pv;
+  // }, {});
+  const processedMetadata = uniqueCategories.map(d => ({
+      category: d,
+      category_label: rawMetaData.filter(dd => dd.category === d)[0].category_label,
+      features: rawMetaData.filter(dd => dd.category === d)
+    }));
+
   return processedMetadata;
 };

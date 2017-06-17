@@ -2,10 +2,10 @@
 
 .back-button{
   position: absolute;
-  top: 25px;
-  right: 25px;
+  top: $top-offset;
+  right: $side-offset;
   color:white;
-  font-size:24px;
+  font-size:$header-size;
   z-index: 1000;
   cursor:pointer;
   padding-left:20px;

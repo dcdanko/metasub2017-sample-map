@@ -2,8 +2,8 @@
 
 .menu__container{
   position:absolute;
-  top:25px;
-  left:25px;
+  top:$top-offset;
+  left:$side-offset;
   z-index:1000;
 }
 
@@ -14,4 +14,11 @@
 
 .menu__button:hover, .menu__button--active{
   color: $green-fill--solid;
+}
+
+@media (max-width: 575px) {
+  .menu__container{
+    pointer-events:none;
+    visibility: hidden;
+  }
 }

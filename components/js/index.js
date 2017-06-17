@@ -30,7 +30,7 @@ loadData(draw);
 
 function draw({citiesData, metaData}){
 
-  const defaultMetadata = {category: "", value: "", use:false};
+  const defaultMetadata = {category: "", type: "", use:false};
 
   // const defaultMetadata = {category:"sampling_place", value:"seat", use:true};
 
