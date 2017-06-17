@@ -8,7 +8,7 @@ const citiesLayer = mapOverlayLayer()
   .type("Point")
   .name("cities")
   .render("Vector")
-  .addPropMethods(["onCityClick", "view","time", "startTime", "radiusScale"])
+  .addPropMethods(["onCityClick", "view","time", "startTime", "radiusScale", "metadataFilter"])
   .draw(function(){
     const {data, group, view, map, onCityClick} = this.props();
 
@@ -55,13 +55,15 @@ const citiesLayer = mapOverlayLayer()
 
 const formatTime =  d3.timeFormat("%m/%d/%Y");
 
+
+
 citiesLayer.updateTime = function(){
-    const {view, time, startTime} = this.props();
+    const {view, time, startTime, metadataFilter} = this.props();
     
     if (view.view === "world"){
       const {overlayCircles, radiusScale} = this.props();
       overlayCircles.attrs({
-        r: d => radiusScale(d.getCurrentSampleCount(time))
+        r: d => radiusScale(d.getCurrentSampleCount({time, metadataFilter}))
       })
       .on("mouseover", (d) => {
           console.log(d);
@@ -69,14 +71,14 @@ citiesLayer.updateTime = function(){
             .text([
               ["Location: ", `${d.name_full}`],
               ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
-              ["Samples Taken: ", `${d.getCurrentSampleCount(time)}`]
+              ["Samples Taken: ", `${d.getCurrentSampleCount({time, metadataFilter})}`]
             ])
             .draw();
         });
     }else if (view.view === "city"){
       const {data, group, map} = this.props();
       this._.overlayCircles = group.selectAll(".map__city-circle")
-        .data(data.getCurrentSamples(time));
+        .data(data.getCurrentSamples({time, metadataFilter}));
       const {overlayCircles} =this.props();
 
       overlayCircles

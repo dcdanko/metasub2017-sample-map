@@ -48,6 +48,7 @@ function draw({citiesData, metadata}){
   const mapState = state()
     .defaultValues({
       data: summarizedCitiesData,
+      filteredData: summarizedCitiesData,
       width: mapContainer.node().getBoundingClientRect().width,
       view: {view: "world", city:""},
       metadataFilter: defaultMetadata,
@@ -60,15 +61,17 @@ function draw({citiesData, metadata}){
   const sampleMap = map(worldBounds);
 
   citiesLayer
+    .metadataFilter(defaultMetadata)
     .view(mapState.view())
     .radiusScale(summarizedCitiesData.radiusScale)
     .startTime(summarizedCitiesData.timeExtent[0])
     .time(mapState.time())
     .onCityClick(d => {
       mapState.update({
+        //metadataFilter: Object.assign({},defaultMetadata, {view:"city"}),
         metadataFilter: defaultMetadata,
         view:{view: "city", city: d.id}, 
-        time: d.timeExtent[1]
+        time: d.timeExtent[1]//thismight not work
       });
       //mapState.update();
     })
@@ -119,12 +122,28 @@ function draw({citiesData, metadata}){
 
   mapState.registerCallback({
     metadataFilter(){
-      const {metadataFilter} = this.props();
+      const {metadataFilter, view} = this.props();
+      console.log(view);
 
-      console.log(metadataFilter);
+      let filteredData = summarizeCitiesData({data:citiesData, metadataFilter:metadataFilter});
+      // citiesLayer.data(filteredData.features);
+
+      if (view.view === "city"){
+        filteredData = filteredData.features.filter(d => d.id === view.city)[0];
+      }
+
+      citiesLayer.metadataFilter(metadataFilter);
       
       metadataMenu
         .metadataFilter(metadataFilter);
+
+      mapTimeline
+        .data(filteredData.sampleFrequency)
+        .xScale(filteredData.xScale)
+        .yScale(filteredData.yScale)
+        .updateView();
+
+      mapState.update({time: filteredData.timeExtent[1]});
     },
     width(){
       const {width} = this.props();
@@ -151,7 +170,7 @@ function draw({citiesData, metadata}){
       //DEFINE DATA SUBSET HERE?
 
       if (view.view === "city"){
-        const selectedCity = data.features.filter(d => d.id === view.city)[0];
+        const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
 
         const latExtent = d3.extent(selectedCity.features, d => d.lat);
         const lonExtent = d3.extent(selectedCity.features, d => d.lon);
@@ -181,20 +200,20 @@ function draw({citiesData, metadata}){
           .update();
 
         citiesLayer
-          .data(data.features)
+          .data(summarizedCitiesData.features)
           .draw();
 
         mapTimeline
-          .data(data.sampleFrequency)
-          .xScale(data.xScale)
-          .yScale(data.yScale)
+          .data(summarizedCitiesData.sampleFrequency)
+          .xScale(summarizedCitiesData.xScale)
+          .yScale(summarizedCitiesData.yScale)
           .updateView();
 
         sampleMap.fitBounds(worldBounds);
 
         backButton.remove();
 
-        metadataMenu.currentFeatures(data.allSamples);
+        metadataMenu.currentFeatures(summarizedCitiesData.allSamples);
       }
       metadataMenu.updateView();
     }

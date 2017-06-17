@@ -32,7 +32,7 @@ montevideo,"Montevideo, Uruguay",,-34.901112,-56.164532
 moscow,"Moscow, Russia",,55.755826,37.6173
 new_delhi,"New Delhi, India",,28.613939,77.209021
 novosibirsk,"Novosibirsk, Russia",,55.008353,82.935733
-nyc,"New York City, USA",,40.73061,-73.935242
+nyc,"New York City, USA",106125,40.73061,-73.935242
 oslo,"Oslo, Norway",,59.911491,10.757933
 paris,"Paris, France",105494,48.858093,2.294694
 porto,"Porto, Portugal",,41.157944,-8.629105
@@ -44,15 +44,15 @@ san_franscisco,"San Francisco, USA",,37.774929,-122.419416
 santiago,"Santiago, Chile",,-33.44889,-70.669265
 sao_paulo,"Sao Paulo, Brazil",,-23.5475,-46.63611
 seattle,"Seattle, USA",,47.606209,-122.332071
-sendai,"Sendai, Japan",,38.268215,140.869356
+sendai,"Sendai, Japan",106275,38.268215,140.869356
 seoul,"Seoul, South Korea",,37.5326,127.024612
 shanghai,"Shanghai, China",,31.267401,121.522179
 sheffield,"Sheffield, UK",,53.381129,-1.470085
-singapore,Singapore,,1.29027,103.851959
+singapore,Singapore,106051,1.29027,103.851959
 stockholm,"Stockholm, Sweden",,59.334591,18.06324
 sydney,"Sydney, Australia",,-33.865143,151.2099
 tehran,"Tehran, Iran",,35.689197,51.388974
-tokyo,"Tokyo, Japan",,35.709026,139.731992
+tokyo,"Tokyo, Japan",106056,35.709026,139.731992
 trento,"Trento, Italy",,46.074779,11.121749
 vienna,"Vienna, Austria",,48.208174,16.373819
 zagreb,"Zagreb, Croatia",,45.815011,15.981919

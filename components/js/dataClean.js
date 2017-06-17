@@ -63,12 +63,17 @@ const getSummary = points => {
   };
 
 export const addSampleDataToCities = ({citiesData, samplesData}) => {
-  const getCurrentSamples = function(time){
-    return this.features.filter(d => d.time <= time);
+  const getCurrentSamples = function({time, metadataFilter}){
+    if (metadataFilter.category === "" || metadataFilter.type === ""){
+      return this.features.filter(d => d.time <= time);
+    }else{
+      return this.features.filter(d => d.time <= time && d[metadataFilter.category] === metadataFilter.type);
+    }
+    
   };
 
-  const getCurrentSampleCount = function(time){
-    return this.getCurrentSamples(time).length;
+  const getCurrentSampleCount = function({time, metadataFilter}){
+    return this.getCurrentSamples({time, metadataFilter}).length;
   };
 
   const citiesDataWithSamples = citiesData.map((city, i) => {
