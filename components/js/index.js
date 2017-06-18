@@ -3,6 +3,7 @@ require("../scss/map.scss");
 require("../scss/timeline.scss");
 require("../scss/backButton.scss");
 require("../scss/metadataMenu.scss");
+require("../scss/readout.scss");
 //Promise polyfill
 import Promise from "promise-polyfill"; 
 if (!window.Promise) {
@@ -20,7 +21,7 @@ import {summarizeCitiesData} from "./dataClean";
 import timeline from "./timeline";
 import menu from "./metadataMenu";
 import button from "./backButton";
-
+import readout from "./readout";
 
 
 
@@ -124,6 +125,19 @@ function draw({citiesData, metadata}){
   //readout--view, metadataFilter, total, time (start/finish)
 
   console.log(summarizedCitiesData.allSamples.length);
+  console.log(mapTimeline.height(), mapTimeline.padding());
+
+  const mapReadout = readout()
+    .selection(mapContainer)
+    .position({
+      bottom: mapTimeline.height()
+    })
+    .total(summarizedCitiesData.allSamples.length)
+    .metadataFilter(mapState.metadataFilter())
+    .time(mapState.time())
+    .startTime(summarizedCitiesData.timeExtent[0])
+    .location("Worldwide")
+    .draw();
 
   mapState.registerCallback({
     metadataFilter(){
@@ -152,13 +166,18 @@ function draw({citiesData, metadata}){
         .yScale(filteredData.yScale)
         .updateView();
 
-      mapState.update({time: filteredData.timeExtent[1]});
+      mapState
+        .update({time: filteredData.timeExtent[1]});
     },
     width(){
       const {width} = this.props();
       mapTimeline
         .width(width)
         .updateSize();
+
+      mapReadout.position({bottom: mapTimeline.height()})
+        .update();
+
     },
     time(){
       const {time, view} = this.props();
@@ -171,14 +190,17 @@ function draw({citiesData, metadata}){
         .updateTime();
 
       if (view.view === "world"){
-        console.log(citiesLayer.getGlobalSampleTotal());
+        mapReadout.total(citiesLayer.getGlobalSampleTotal());
+        console.log();
       }else if (view.view === "city"){
-        console.log(citiesLayer.getCitySampleTotal());
+        mapReadout.total(citiesLayer.getCitySampleTotal());
       }
+      mapReadout.update();
 
     },
     view(){
       const {view, data} = this.props();
+      console.log(view);
       const svgPadding = .1;
 
       citiesLayer.view(view);
@@ -186,6 +208,10 @@ function draw({citiesData, metadata}){
 
       if (view.view === "city"){
         const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
+
+        mapReadout
+          .location(`in ${selectedCity.name_full}`)
+          .update();
 
         const latExtent = d3.extent(selectedCity.features, d => d.lat);
         const lonExtent = d3.extent(selectedCity.features, d => d.lon);
@@ -210,6 +236,11 @@ function draw({citiesData, metadata}){
 
         metadataMenu.currentFeatures(selectedCity.features);
       }else if (view.view === "world"){
+
+        mapReadout
+          .location("Worldwide")
+          .update();
+
         d3Overlay
           .coordinateBounds(worldBounds)
           .update();

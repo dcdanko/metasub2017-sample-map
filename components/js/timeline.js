@@ -7,13 +7,15 @@ const props = getObjectWithPropMethods([
   "selection",
   "data",
   "width",
+  "height",
   "position",
   "time",
   "drag",
   "xValue",
   "yValue",
   "xScale",
-  "yScale"
+  "yScale",
+  "padding"
 ]);
 
 const methods = {
@@ -30,6 +32,16 @@ const methods = {
         bottom: `${0}px`,
         "pointer-events":"none"
       });
+  },
+  drawYAxisLabel(){
+    const {svg, padding} = this.props();
+    console.log(svg.node().getBBox());
+    svg.append("text").attrs({
+      x:padding.left + 30,
+      y:30, 
+      class: "timeline__label"
+    })
+    .text("samples per hour");
   },
   drawAxes(){
     const {svg} = this.props();
@@ -135,6 +147,7 @@ const methods = {
     this.drawAxes();
     this.drawLine();
     this.drawSlider();
+    this.drawYAxisLabel();
 
     this.updateSize();
 
@@ -166,8 +179,8 @@ const timeline = () => {
       padding: {left: 35, bottom:40, right:15, top:10},
       textMargin: {left:10, top:15},
       width:800,
-      minHeight: 200,
-      heightWidthRatio:.2,
+      minHeight: 150,
+      heightWidthRatio:.15,
       xScale: d3.scaleTime(),
       yScale: d3.scaleLinear()
     }

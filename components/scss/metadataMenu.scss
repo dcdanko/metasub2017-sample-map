@@ -50,7 +50,7 @@
 }
 
 .menu__row-container{
-  max-height:300px;
+  max-height:200px;
   padding-right:15px;
   overflow-y:auto;
 }
@@ -86,6 +86,11 @@
 @media (max-width: 575px) {
   .menu__container{
     pointer-events:none;
+    visibility: hidden;
+  }
+
+  .menu__title-container{
+    pointer-events: none;
     visibility: hidden;
   }
 }

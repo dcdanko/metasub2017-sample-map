@@ -1,0 +1,13 @@
+@import "variables";
+
+.map-readout{
+  position:absolute;
+  left:$side-offset;
+  color:white;
+  font-size:$header-size;
+  z-index:1000;
+  padding-left:35px;
+  background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/v1497477836/metasub/Asset2.png");
+  background-size: contain;
+  background-repeat:no-repeat;
+}
