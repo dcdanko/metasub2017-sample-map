@@ -52,7 +52,8 @@ function draw({citiesData, metadata}){
       width: mapContainer.node().getBoundingClientRect().width,
       view: {view: "world", city:""},
       metadataFilter: defaultMetadata,
-      time: summarizedCitiesData.timeExtent[1]
+      time: summarizedCitiesData.timeExtent[1],
+      totalSamples: 0
     });
 
 
@@ -120,6 +121,7 @@ function draw({citiesData, metadata}){
       time: summarizedCitiesData.timeExtent[1]
     }));
 
+  console.log(summarizedCitiesData.allSamples.length);
 
   mapState.registerCallback({
     metadataFilter(){
@@ -157,7 +159,7 @@ function draw({citiesData, metadata}){
         .updateSize();
     },
     time(){
-      const {time} = this.props();
+      const {time, view} = this.props();
       mapTimeline
         .time(time)
         .updateTime();
@@ -165,6 +167,10 @@ function draw({citiesData, metadata}){
       citiesLayer
         .time(time)
         .updateTime();
+
+      if (view.view === "world"){
+        console.log(citiesLayer.getGlobalSampleTotal());
+      }
 
     },
     view(){

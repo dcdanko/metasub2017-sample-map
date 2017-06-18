@@ -27,6 +27,7 @@ const methods = {
     this.drawTitle();
     this.drawCategories();
 
+
     return this;
   },
   drawTitle(){
@@ -143,8 +144,10 @@ const methods = {
   },
   updateFilter(){
     const {types, metadataFilter} = this.props();
-
-    types.classed("menu__types-row--active", d => d.category === metadataFilter.category && d.type === metadataFilter.type);
+    if (types !== undefined){
+      types.classed("menu__types-row--active", d => d.category === metadataFilter.category && d.type === metadataFilter.type);
+    }
+    
   },
   updateView(){
     //reset metadata

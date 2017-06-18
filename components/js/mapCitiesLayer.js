@@ -20,6 +20,7 @@ const citiesLayer = mapOverlayLayer()
         .enter()
         .append("circle")
         //make setAttributes function to avoid code duplication
+
         .attrs({
           class: "map__city-circle map__circle",
           cx: d => map.latLngToLayerPoint(d).x,
@@ -55,14 +56,22 @@ const citiesLayer = mapOverlayLayer()
 
 const formatTime =  d3.timeFormat("%m/%d/%Y");
 
-
+citiesLayer.getGlobalSampleTotal = function(){
+  const {overlayCircles} = this.props();
+  return d3.sum(overlayCircles.data(), d => d._runningTotal);
+};
 
 citiesLayer.updateTime = function(){
     const {view, time, startTime, metadataFilter} = this.props();
     
     if (view.view === "world"){
       const {overlayCircles, radiusScale} = this.props();
-      overlayCircles.attrs({
+      
+      overlayCircles
+      .each(d => {
+        d._runningTotal = d.getCurrentSampleCount({time, metadataFilter});
+      })
+      .attrs({
         r: d => radiusScale(d.getCurrentSampleCount({time, metadataFilter}))
       })
       .on("mouseover", (d) => {
