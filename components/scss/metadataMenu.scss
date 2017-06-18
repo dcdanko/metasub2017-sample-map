@@ -60,11 +60,16 @@
   margin-bottom:5px;
 }
 
-.menu__row:hover, .menu__title:hover, .menu__types-row:hover, .menu__row--active, .menu__types-row--active{
+.menu__title:hover{
   color: $green-fill--solid;
 }
 
-.menu__row--active{
+.menu__row:hover, .menu__types-row:hover, .menu__row--active, .menu__types-row--active{
+  color: $green-fill--solid;
+  background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497803360/metasub/Asset6.png");
+}
+
+.menu__row--active, .menu__row--active:hover{
   background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497477836/metasub/Asset4.png");
 }
 

@@ -4,3 +4,4 @@ node_modules
 .tmp
 .~lock*
 raw_data
+images

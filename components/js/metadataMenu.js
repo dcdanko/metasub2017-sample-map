@@ -44,7 +44,7 @@ const methods = {
   },
   drawCategories(){
 
-    const {menuContainer, data} = this.props();
+    const {menuContainer, data, onClick} = this.props();
 
     this._.menuRows = menuContainer
       .selectAll(".menu__row")
@@ -59,16 +59,23 @@ const methods = {
         class: d => `menu__row menu__row--${d.category}`
       })
       .on("click", d => {
-        const {category} = this.props();
+        const {category, metadataFilter} = this.props();
         if (d.category !== category){
           this._.category = d.category;
           this.updateCategory();
           this.drawTypes();
+          this.updateFilter();
         }else {
           this._.category = "";
           this.updateCategory();
           this.removeTypes();
         }
+        console.log(d);
+        if (metadataFilter.type !== ""){
+
+          onClick({category: "", type: ""});
+        }
+        
       });
 
     this._.menuButtons = this._.menuRows
@@ -111,21 +118,33 @@ const methods = {
       .enter()
       .append("div")
       .attrs({
-        class: "menu__types-row"
+        class: d => `menu__types-row menu__types-row--${d.type}`
       })
       .text(d => d.type_label)
       .on("click", d => {
-        onClick({category: d.category, type: d.type});
+        const {metadataFilter} = this.props();
+        
+        if (metadataFilter.category === d.category && metadataFilter.type === d.type && metadataFilter.category !== ""){
+          onClick({category: "", type: ""});
+        }else{
+          onClick({category: d.category, type: d.type});
+        }
+
       });
   },
   updateOpenStatus(){
-    const {menuRows, menuContainer, isOpen} = this.props();
+    const {menuContainer, isOpen} = this.props();
     //menuRows.classed("menu__row--off", isOpen ? false : true);
     menuContainer.classed("menu__container--off", isOpen ? false : true);
   },
   updateCategory(){
     const {menuRows, category} = this.props();
     menuRows.classed("menu__row--active", d => d.category === category ? true : false);
+  },
+  updateFilter(){
+    const {types, metadataFilter} = this.props();
+
+    types.classed("menu__types-row--active", d => d.category === metadataFilter.category && d.type === metadataFilter.type);
   },
   updateView(){
     //reset metadata

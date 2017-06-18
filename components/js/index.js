@@ -31,7 +31,7 @@ loadData(draw);
 function draw({citiesData, metadata}){
   const worldBounds = [[90,-180],[-80,180]];
   const defaultMetadata = {category: "", type: ""};
-  const defaultMetadata2 = {category:"sampling_place", type:"seat"};
+  //const defaultMetadata2 = {category:"sampling_place", type:"seat"};
 
   const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
 
@@ -104,6 +104,7 @@ function draw({citiesData, metadata}){
   const metadataMenu = menu()
     .currentFeatures(summarizedCitiesData.allSamples)
     .selection(mapContainer)
+    .metadataFilter(defaultMetadata)
     .data(metadata)
 
     .onClick(newMetadataFilter => mapState.update({
@@ -123,7 +124,7 @@ function draw({citiesData, metadata}){
   mapState.registerCallback({
     metadataFilter(){
       const {metadataFilter, view} = this.props();
-      console.log(view);
+
 
       let filteredData = summarizeCitiesData({data:citiesData, metadataFilter:metadataFilter});
       // citiesLayer.data(filteredData.features);
@@ -135,7 +136,11 @@ function draw({citiesData, metadata}){
       citiesLayer.metadataFilter(metadataFilter);
       
       metadataMenu
-        .metadataFilter(metadataFilter);
+        .metadataFilter(metadataFilter)
+        .updateFilter();
+
+      //readout--filteredData.getTotal()...
+      //could calculate here, update 'totals' variable in cities layer
 
       mapTimeline
         .data(filteredData.sampleFrequency)
