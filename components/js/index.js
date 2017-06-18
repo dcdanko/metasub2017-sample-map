@@ -121,6 +121,8 @@ function draw({citiesData, metadata}){
       time: summarizedCitiesData.timeExtent[1]
     }));
 
+  //readout--view, metadataFilter, total, time (start/finish)
+
   console.log(summarizedCitiesData.allSamples.length);
 
   mapState.registerCallback({
@@ -170,6 +172,8 @@ function draw({citiesData, metadata}){
 
       if (view.view === "world"){
         console.log(citiesLayer.getGlobalSampleTotal());
+      }else if (view.view === "city"){
+        console.log(citiesLayer.getCitySampleTotal());
       }
 
     },

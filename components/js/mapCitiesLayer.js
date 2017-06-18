@@ -61,6 +61,11 @@ citiesLayer.getGlobalSampleTotal = function(){
   return d3.sum(overlayCircles.data(), d => d._runningTotal);
 };
 
+citiesLayer.getCitySampleTotal = function(){
+  const {overlayCircles} = this.props();
+  return overlayCircles.data().length;
+};
+
 citiesLayer.updateTime = function(){
     const {view, time, startTime, metadataFilter} = this.props();
     
