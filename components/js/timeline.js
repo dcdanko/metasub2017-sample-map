@@ -176,7 +176,7 @@ const methods = {
 const timeline = () => {
   const defaultProps = {_:{
       position: {left: 0, bottom:0},
-      padding: {left: 35, bottom:40, right:15, top:10},
+      padding: {left: 65, bottom:40, right:65, top:10},
       textMargin: {left:10, top:15},
       width:800,
       minHeight: 150,
