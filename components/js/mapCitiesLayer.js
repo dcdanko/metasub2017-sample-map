@@ -1,16 +1,21 @@
 import mapOverlayLayer from "./visualization-components/mapOverlay/mapOverlayLayer";
 import tooltip from "./visualization-components/tooltip/tooltip.js";
 
-const mapTooltip = tooltip().selection(d3.select("#sample-map-2017"));
-const getPositionOnPage = () => [d3.event.pageX, d3.event.pageY];
+//const mapTooltip = tooltip().selection(d3.select(".leaflet-map-pane"));
+//const getPositionOnPage = () => [d3.event.pageX, d3.event.pageY];
 
 const citiesLayer = mapOverlayLayer()
   .type("Point")
   .name("cities")
   .render("Vector")
-  .addPropMethods(["onCityClick", "view","time", "startTime", "radiusScale", "metadataFilter"])
+  .addPropMethods(["onCityClick", "view","time", "startTime", "radiusScale", "metadataFilter", "tooltip"])
   .draw(function(){
     const {data, group, view, map, onCityClick} = this.props();
+
+    this._.mapTooltip = tooltip().selection(d3.select(map.getPanes().overlayPane));
+    console.log(map.getPanes().overlayPane);
+
+    const {mapTooltip} = this.props();
 
     group.selectAll(".map__circle").remove();
 
@@ -75,7 +80,7 @@ citiesLayer.getCitySampleTotal = function(){
 };
 
 citiesLayer.updateTime = function(){
-    const {view, time, startTime, metadataFilter} = this.props();
+    const {view, time, startTime, metadataFilter, mapTooltip} = this.props();
     
     if (view.view === "world"){
       const {overlayCircles, radiusScale} = this.props();
@@ -90,8 +95,8 @@ citiesLayer.updateTime = function(){
       .on("mouseover", function(d){
         //d3.select(this).style("fill","red");
           const circlePos = d3.select(this).node().getBBox();
-          const pos = d3.mouse(this);
-          mapTooltip.position([pos[0] , pos[1] ])
+
+          mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
             .text([
               ["Location: ", `${d.name_full}`],
               ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
