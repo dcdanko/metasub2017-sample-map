@@ -7,15 +7,47 @@
   stroke-width: 2px;
 }
 
-.map__city-circle:hover{
-  fill: $green-fill--high-opacity;
-}
+
 
 .map__city-circle--inactive{
   stroke-width:0px;
   fill: rgba(255,255,255,.75);
 }
 
-.leaflet-pane > svg.d3-svg-overlay path{
-  pointer-events: auto;
+
+
+// .leaflet-pane > svg.d3-svg-overlay path, .leaflet-pane > svg.d3-svg-overlay *{
+//   pointer-events: auto !important;
+// }
+// .leaflet-pane > svg *{
+//   pointer-events: auto !important;
+// }
+
+
+
+.map__city-circle:hover{
+  fill: $green-fill--high-opacity;
 }
+
+.map__city-circle{
+  pointer-events:auto !important;
+}
+
+// .leaflet-overlay-pane{
+//   pointer-events: all;
+// }
+
+// .leaflet-pane > svg.d3-svg-overlay path{
+
+//   pointer-events: all !important;
+// }
+
+// .leaflet-pane > svg.d3-svg-overlay > g.d3-vector-overlay{
+
+//   pointer-events: all !important;
+// }
+
+// .leaflet-pane > svg.d3-svg-overlay > g.d3-vector-overlay circle{
+
+//   pointer-events: all !important;
+// }

@@ -29,12 +29,18 @@ const citiesLayer = mapOverlayLayer()
           cy: d => map.latLngToLayerPoint(d).y,
           cursor:"pointer"
         })
+
         .classed("map__city-circle--inactive", false)
         .on("click", d => {
           mapTooltip.remove();
           d.live && d.features.length > 0 ? onCityClick(d) : console.log(d);
         })
-        
+        .on("touchend", function(d) {
+
+          mapTooltip.remove();
+          d.live && d.features.length > 0 ? onCityClick(d) : console.log(d);
+
+        })
         .on("mousemove", () => {
           mapTooltip.position(getPositionOnPage()).update();
         })
@@ -81,7 +87,8 @@ citiesLayer.updateTime = function(){
       .attrs({
         r: d => radiusScale(d._runningTotal)
       })
-      .on("mouseover", (d) => {
+      .on("mouseover", function(d){
+        //d3.select(this).style("fill","red");
           console.log(d);
           mapTooltip.position(getPositionOnPage())
             .text([
@@ -101,6 +108,7 @@ citiesLayer.updateTime = function(){
         .enter()
         .append("circle")
         .merge(overlayCircles)
+        .attr('style', 'pointer-events:visiblePainted;') 
         .attrs({
           class: "map__city-circle map__circle",
           r: 4,
