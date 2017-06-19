@@ -11,3 +11,10 @@
   background-size: contain;
   background-repeat:no-repeat;
 }
+
+@media (max-width: $sm) {
+  .map-readout{
+    font-size: 18px;
+  }
+
+}

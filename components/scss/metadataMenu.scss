@@ -83,7 +83,7 @@
   pointer-events:none;
 }
 
-@media (max-width: 575px) {
+@media (max-width: $sm) {
   .menu__container{
     pointer-events:none;
     visibility: hidden;
@@ -93,4 +93,5 @@
     pointer-events: none;
     visibility: hidden;
   }
+
 }

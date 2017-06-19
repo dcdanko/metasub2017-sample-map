@@ -39,14 +39,14 @@ const citiesLayer = mapOverlayLayer()
         .on("mouseout", () => {
           mapTooltip.remove();
         });
-      this._.inactiveCircles = group.selectAll(".map__city-circle--inactive")
-        .data(data.filter(d => !d.live))
-        .enter()
-        .append("circle")
-        .attrs({
-          class: "map__city-circle--inactive map__circle",
-          r:2
-        });
+      // this._.inactiveCircles = group.selectAll(".map__city-circle--inactive")
+      //   .data(data.filter(d => !d.live))
+      //   .enter()
+      //   .append("circle")
+      //   .attrs({
+      //     class: "map__city-circle--inactive map__circle",
+      //     r:2
+      //   });
     }
 
     this.updateTime();
@@ -113,6 +113,7 @@ citiesLayer.updateTime = function(){
               ["Time Submitted: ", `${formatTime(d.time)}`]
             ])
             .draw();
+          console.log(d);
         })
         .on("mousemove", () => {
           mapTooltip.position(getPositionOnPage()).update();
