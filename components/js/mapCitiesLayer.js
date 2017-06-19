@@ -1,7 +1,7 @@
 import mapOverlayLayer from "./visualization-components/mapOverlay/mapOverlayLayer";
 import tooltip from "./visualization-components/tooltip/tooltip.js";
 
-const mapTooltip = tooltip().selection(d3.select("body"));
+const mapTooltip = tooltip().selection(d3.select("#sample-map-2017"));
 const getPositionOnPage = () => [d3.event.pageX, d3.event.pageY];
 
 const citiesLayer = mapOverlayLayer()
@@ -35,14 +35,14 @@ const citiesLayer = mapOverlayLayer()
           mapTooltip.remove();
           d.live && d.features.length > 0 ? onCityClick(d) : console.log(d);
         })
-        .on("touchend", function(d) {
+        .on("touchstart", function(d) {
 
           mapTooltip.remove();
           d.live && d.features.length > 0 ? onCityClick(d) : console.log(d);
 
         })
         .on("mousemove", () => {
-          mapTooltip.position(getPositionOnPage()).update();
+          //mapTooltip.position(getPositionOnPage()).update();
         })
         .on("mouseout", () => {
           mapTooltip.remove();
@@ -89,8 +89,9 @@ citiesLayer.updateTime = function(){
       })
       .on("mouseover", function(d){
         //d3.select(this).style("fill","red");
-          console.log(d);
-          mapTooltip.position(getPositionOnPage())
+          const circlePos = d3.select(this).node().getBBox();
+          const pos = d3.mouse(this);
+          mapTooltip.position([pos[0] , pos[1] ])
             .text([
               ["Location: ", `${d.name_full}`],
               ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
@@ -108,7 +109,6 @@ citiesLayer.updateTime = function(){
         .enter()
         .append("circle")
         .merge(overlayCircles)
-        .attr('style', 'pointer-events:visiblePainted;') 
         .attrs({
           class: "map__city-circle map__circle",
           r: 4,
@@ -116,8 +116,9 @@ citiesLayer.updateTime = function(){
           cy: d => map.latLngToLayerPoint(d).y,
           cursor:"pointer"
         })
-        .on("mouseover", d => {
-          mapTooltip.position(getPositionOnPage())
+        .on("mouseover", function(d){
+          const circlePos = d3.select(this).node().getBBox();
+          mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
             .text([
               ["Sampling Place: ", `${d.sampling_place}`],
               ["Time Submitted: ", `${formatTime(d.time)}`]
@@ -126,7 +127,7 @@ citiesLayer.updateTime = function(){
           console.log(d);
         })
         .on("mousemove", () => {
-          mapTooltip.position(getPositionOnPage()).update();
+          //mapTooltip.position(getPositionOnPage()).update();
         })
         .on("mouseout", () => {
           mapTooltip.remove();

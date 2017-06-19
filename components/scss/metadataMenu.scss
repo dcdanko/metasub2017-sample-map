@@ -69,9 +69,14 @@
   background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497803360/metasub/Asset6.png");
 }
 
+.menu__types-row:hover, .menu__types-row--active{
+  background-image:none;
+}
+
 .menu__row--active, .menu__row--active:hover{
   background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497477836/metasub/Asset4.png");
 }
+
 
 .menu__row--off{
   opacity:0;

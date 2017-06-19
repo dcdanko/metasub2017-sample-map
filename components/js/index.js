@@ -1,4 +1,4 @@
-//require("../scss/leaflet.scss");
+require("../scss/leaflet.css");
 require("../scss/layout.scss");
 require("../scss/map.scss");
 require("../scss/timeline.scss");

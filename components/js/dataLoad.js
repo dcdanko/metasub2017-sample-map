@@ -1,9 +1,11 @@
 import {processCitiesData, addSampleDataToCities, formatmetadataMenu} from "./dataClean";
 
+const dataPath = "https://s3-us-west-2.amazonaws.com/metasub2017/";
+
 const loadData = callback => {
   new Promise((resolve, reject) => {
 
-    d3.csv("data/cities.csv", (error, data) => {
+    d3.csv(dataPath + "data/cities.csv", (error, data) => {
         if (error){
           reject(error);
         }else{
@@ -48,7 +50,7 @@ const loadData = callback => {
 
 
 function loadmetadata({citiesData, callback}){
-  d3.csv("data/metadata.csv", (error, metadata) =>{
+  d3.csv(dataPath + "data/metadata.csv", (error, metadata) =>{
     if (error){
       console.log(error);
       throw error;
