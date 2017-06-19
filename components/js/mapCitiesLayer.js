@@ -16,7 +16,9 @@ const citiesLayer = mapOverlayLayer()
 
     if (view.view === "world"){
       this._.overlayCircles = group.selectAll(".map__city-circle")
-        .data(data.filter(d => d.live))
+        .data(data.filter(d => d.live).sort(function(a,b){
+          return b.sampleCount - a.sampleCount;
+        }))
         .enter()
         .append("circle")
         //make setAttributes function to avoid code duplication
@@ -77,7 +79,7 @@ citiesLayer.updateTime = function(){
         d._runningTotal = d.getCurrentSampleCount({time, metadataFilter});
       })
       .attrs({
-        r: d => radiusScale(d.getCurrentSampleCount({time, metadataFilter}))
+        r: d => radiusScale(d._runningTotal)
       })
       .on("mouseover", (d) => {
           console.log(d);
@@ -85,7 +87,7 @@ citiesLayer.updateTime = function(){
             .text([
               ["Location: ", `${d.name_full}`],
               ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
-              ["Samples Taken: ", `${d.getCurrentSampleCount({time, metadataFilter})}`]
+              ["Samples Taken: ", `${d._runningTotal}`]
             ])
             .draw();
         });

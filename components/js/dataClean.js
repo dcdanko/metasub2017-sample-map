@@ -15,7 +15,8 @@ export const processCitiesData = rawData => {
 const processSampleData = rawSamples => {
   const cleanSamples = rawSamples.map(d => {
     const cleanSample = Object.assign({}, d);
-    cleanSample.time = new Date(cleanSample._submission_time);
+    //cleanSample.time = new Date(cleanSample._submission_time);
+    cleanSample.time = new Date(cleanSample.end.slice(0,cleanSample.end.indexOf(".")));
     cleanSample.lat = cleanSample._geolocation[0];
     cleanSample.lon = cleanSample._geolocation[1];
     return cleanSample;
