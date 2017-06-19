@@ -35,7 +35,6 @@ const methods = {
   },
   drawYAxisLabel(){
     const {svg, padding} = this.props();
-    console.log(svg.node().getBBox());
     svg.append("text").attrs({
       x:padding.left + 30,
       y:30, 

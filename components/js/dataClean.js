@@ -2,6 +2,7 @@ export const processCitiesData = rawData => {
   const cleanedData = rawData.map(rawCity => {
     const cleanCity = Object.assign({}, rawCity);
     if (cleanCity.id !== ""){
+      //cleanCity.path = `http://localhost:3000/${cleanCity.id}`;
       cleanCity.path = `https://metasub-kobo-wrapper.herokuapp.com/${cleanCity.id}`;
       cleanCity.live = true;
     }else{
@@ -96,6 +97,7 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
 
       return cityWithSamples;
     });
+
   return citiesDataWithSamples;
 };
 

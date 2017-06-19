@@ -26,6 +26,7 @@ const loadData = callback => {
     const sampleDataPromises = citiesData
       .map(city => {
         if (city.live){
+
           return getSampleDataPromise(city.path);
         }else{
           return [];

@@ -30,6 +30,7 @@ loadData(draw);
 
 
 function draw({citiesData, metadata}){
+  d3.select("#data-loading").style("opacity",1).transition().duration(500).style("opacity",0).remove();
   const worldBounds = [[90,-180],[-80,180]];
   const defaultMetadata = {category: "", type: ""};
   //const defaultMetadata2 = {category:"sampling_place", type:"seat"};
@@ -124,8 +125,8 @@ function draw({citiesData, metadata}){
 
   //readout--view, metadataFilter, total, time (start/finish)
 
-  console.log(summarizedCitiesData.allSamples.length);
-  console.log(mapTimeline.height(), mapTimeline.padding());
+  // console.log(summarizedCitiesData.allSamples.length);
+  // console.log(mapTimeline.height(), mapTimeline.padding());
 
   const mapReadout = readout()
     .selection(mapContainer)

@@ -1,6 +1,6 @@
 name,name_full,id,lat,lon
 auckland,"Auckland, New Zealand",,-36.84846,174.763332
-baltimore,"Baltimore, USA",,39.299236,-76.609383
+baltimore,"Baltimore, USA",106700,39.299236,-76.609383
 barcelona,"Barcelona, Spain ",,41.390205,2.154007
 beijing,"Beijing, China",,39.913818,116.363625
 berlin,"Berlin, German ",,52.517452,13.407655
@@ -16,24 +16,34 @@ denver,"Denver, USA",,39.739236,-104.990251
 doha,"Doha, Qatar",105346,25.285447,51.53104
 dusseldorf,"Dusseldorf, Germany",,51.227741,6.773456
 fairbanks,"Fairbanks, USA",,64.837778,-147.716389
+fukuoka,"Fukuoka, Japan",106382,33.570572,130.358446
+glenview,"Glenview, USA",,42.083173,-87.816928
 guangzhou,"Guangzhou, China",,23.128994,113.25325
+hanoi,"Hanoi, Vietnam",,21.027666,105.83395
 hong_kong,"Hong Kong, China",,22.39572,114.111111
 hyderabad,"Hyderabad, India",,17.38535,78.486715
-ilorin,"Ilorin, Nigeria",,8.479879,4.541814
+ilorin,"Ilorin, Nigeria",105575,8.479879,4.541814
 izmir,"Izmir, Turkey",,38.423789,27.142837
 johannesburg,"Johannesburg, South Africa",,-26.204091,28.047224
+kuala_lumpur,"Kuala Lumpur, Malaysia",106140,3.138846,101.693682
+kyiv,"Kyiv, Ukraine",,50.450175,30.523911
 lagos,"Lagos, Nigeria",,6.524379,3.379206
+lima,"Lima, Peru",106226,-12.046645,-77.062667
 lisbon,"Lisbon, Portugal",,38.736946,-9.142685
-london,"London, UK",,51.507351,-0.127758
+london,"London, UK",106618,51.507351,-0.127758
 marseille,"Marseille, France",,43.296482,5.36978
 melbourne,"Melbourne, Australia",,-37.816279,144.964246
+mcmurdo,McMurdo Station Antarctica,,-77.845426,166.67547
 mexico_city,"Mexico City, Mexico",,19.438105,-99.202766
+minneapolis,"Minneapolis, USA",,44.975906,-93.269715
 montevideo,"Montevideo, Uruguay",,-34.901112,-56.164532
 moscow,"Moscow, Russia",,55.755826,37.6173
+naples,"Naples, Italy",105916,40.85442,14.273373
 new_delhi,"New Delhi, India",,28.613939,77.209021
 novosibirsk,"Novosibirsk, Russia",,55.008353,82.935733
 nyc,"New York City, USA",106125,40.73061,-73.935242
-oslo,"Oslo, Norway",,59.911491,10.757933
+obihiro,"Obihiro, Japan",105576,42.916667,143.2
+oslo,"Oslo, Norway",106155,59.911491,10.757933
 paris,"Paris, France",105494,48.858093,2.294694
 porto,"Porto, Portugal",,41.157944,-8.629105
 ribeirao_preto,"Ribeirao Preto, Brazil",,-21.170401,-47.810324
@@ -49,12 +59,16 @@ seoul,"Seoul, South Korea",,37.5326,127.024612
 shanghai,"Shanghai, China",,31.267401,121.522179
 sheffield,"Sheffield, UK",,53.381129,-1.470085
 singapore,Singapore,106051,1.29027,103.851959
+sofia,"Sofia, Bulgaria",,42.697531,23.321907
+st_louis,"St. Louis, USA",,38.628094,-90.193533
 stockholm,"Stockholm, Sweden",,59.334591,18.06324
 sydney,"Sydney, Australia",,-33.865143,151.2099
 tehran,"Tehran, Iran",,35.689197,51.388974
+taipei,"Taipei, Taiwan",106677,25.035194,121.562627
 tokyo,"Tokyo, Japan",106056,35.709026,139.731992
 trento,"Trento, Italy",,46.074779,11.121749
+tsuruoka,"Tsuruoka, Japan",106146,38.736807,139.825872
 vienna,"Vienna, Austria",,48.208174,16.373819
+yamaguchi,"Yamaguchi, Japan",106148,34.244634,131.465633
 zagreb,"Zagreb, Croatia",,45.815011,15.981919
 zurich,"Zurich, Switzerland",,47.376887,8.541694
-obihiro,"Obihiro, Japan",105576,42.916667,143.2
