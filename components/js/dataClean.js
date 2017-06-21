@@ -80,7 +80,7 @@ export const distance = (lat1, lon1, lat2, lon2, unit) => {
     dist = dist * 0.8684; 
   }
   return dist;
-}
+};
 
 export const addSampleDataToCities = ({citiesData, samplesData}) => {
   const getCurrentSamples = function({time, metadataFilter}){

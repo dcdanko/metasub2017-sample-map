@@ -13,7 +13,7 @@ const citiesLayer = mapOverlayLayer()
     const {data, group, view, map, onCityClick} = this.props();
 
     this._.mapTooltip = tooltip().selection(d3.select(map.getPanes().overlayPane));
-    console.log(map.getPanes().overlayPane);
+
 
     const {mapTooltip} = this.props();
 
