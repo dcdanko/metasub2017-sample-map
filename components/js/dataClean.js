@@ -21,7 +21,7 @@ const processSampleData = rawSamples => {
     cleanSample.lat = cleanSample._geolocation[0];
     cleanSample.lon = cleanSample._geolocation[1];
     return cleanSample;
-  });
+  }); //add filter here?
   return cleanSamples;
 };
 const getTimeExtent = points => d3
@@ -64,6 +64,24 @@ const getSummary = points => {
     };
   };
 
+export const distance = (lat1, lon1, lat2, lon2, unit) => {
+  const radlat1 = Math.PI * lat1/180;
+  const radlat2 = Math.PI * lat2/180;
+  const theta = lon1-lon2;
+  const radtheta = Math.PI * theta/180;
+  let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+  dist = Math.acos(dist);
+  dist = dist * 180/Math.PI;
+  dist = dist * 60 * 1.1515;
+  if (unit==="K") { 
+    dist = dist * 1.609344; 
+  }
+  if (unit==="N") { 
+    dist = dist * 0.8684; 
+  }
+  return dist;
+}
+
 export const addSampleDataToCities = ({citiesData, samplesData}) => {
   const getCurrentSamples = function({time, metadataFilter}){
     if (metadataFilter.category === "" || metadataFilter.type === ""){
@@ -80,9 +98,15 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
 
   const citiesDataWithSamples = citiesData.map((city, i) => {
       const cityWithSamples = Object.assign({}, city);
-
+      //console.log(cityWithSamples);
       if (cityWithSamples.live){
+        //filter out outlier points
         const processedSamples = processSampleData(samplesData[i]);
+
+        //   .filter(d => {
+        //     const distanceFromCenter = distance(parseFloat(cityWithSamples.lat), parseFloat(cityWithSamples.lon), d.lat, d.lon);
+        //     return distanceFromCenter < 500;
+        // });
         
         Object.assign(cityWithSamples, 
           {
@@ -139,7 +163,7 @@ export const summarizeCitiesData = ({data, metadataFilter}) => {
   const summarizedCitiesData = Object.assign(getSummary(allSamples),{
       features: summarizedCities,
       allSamples: allSamples,
-      radiusScale: d3.scaleSqrt().domain(sampleTotalsExtent).range([4,50])
+      radiusScale: d3.scaleSqrt().domain(sampleTotalsExtent).range([4,20])
     });
   return summarizedCitiesData;
 };

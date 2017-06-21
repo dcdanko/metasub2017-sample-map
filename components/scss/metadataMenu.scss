@@ -4,14 +4,14 @@
   position:absolute;
   top:$top-offset;
   left:$side-offset;
-  z-index:1000;
+  z-index: $overlay-z-index;
 }
 
 .menu__container{
   position:absolute;
   top:$top-offset + 30;
   left:$side-offset;
-  z-index:1000;
+  z-index: $overlay-z-index;
   -webkit-transition: opacity 250ms;
   -moz-transition: opacity 250ms;
   -o-transition: opacity 250ms;

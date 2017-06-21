@@ -18,7 +18,7 @@ import loadData from "./dataLoad";
 import map from "./map";
 
 import citiesLayer from "./mapCitiesLayer";
-import {summarizeCitiesData} from "./dataClean";
+import {summarizeCitiesData, distance} from "./dataClean";
 import timeline from "./timeline";
 import menu from "./metadataMenu";
 import button from "./backButton";
@@ -59,7 +59,11 @@ function draw({citiesData, metadata}){
       totalSamples: 0
     });
 
-
+  if (mapState.width() >= 992){
+    summarizedCitiesData.radiusScale.range([4,30]);
+  }else{
+    summarizedCitiesData.radiusScale.range([4,20]);
+  }
 
   //extract mapContainer id from mapContainer.node(), send to map module as argument
   const sampleMap = map(worldBounds);
@@ -173,6 +177,11 @@ function draw({citiesData, metadata}){
     },
     width(){
       const {width} = this.props();
+      // if (width >= 992){
+      //   summarizedCitiesData.radiusScale.range([4,30]);
+      // }else{
+      //   summarizedCitiesData.radiusScale.range([4,20]);
+      // }
       mapTimeline
         .width(width)
         .updateSize();
@@ -210,13 +219,17 @@ function draw({citiesData, metadata}){
 
       if (view.view === "city"){
         const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
+        const pointsInView = selectedCity.features.filter(d => {
+            const distanceFromCenter = distance(parseFloat(selectedCity.lat), parseFloat(selectedCity.lon), d.lat, d.lon);
+            return distanceFromCenter < 500;
+        });
 
         mapReadout
           .location(`in ${selectedCity.name_full}`)
           .update();
 
-        const latExtent = d3.extent(selectedCity.features, d => d.lat);
-        const lonExtent = d3.extent(selectedCity.features, d => d.lon);
+        const latExtent = d3.extent(pointsInView, d => d.lat);
+        const lonExtent = d3.extent(pointsInView, d => d.lon);
         const newBounds = [[latExtent[1], lonExtent[0]], [latExtent[0], lonExtent[1]]];
 
         mapTimeline

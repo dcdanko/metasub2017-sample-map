@@ -6,7 +6,7 @@
   right: $side-offset;
   color:white;
   font-size:$header-size;
-  z-index: 1000;
+  z-index: $overlay-z-index;
   cursor:pointer;
   padding-left:20px;
   background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_scale,w_150/v1497477836/metasub/Asset3.png");

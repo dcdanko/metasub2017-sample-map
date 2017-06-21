@@ -1,5 +1,5 @@
 import {processCitiesData, addSampleDataToCities, formatmetadataMenu} from "./dataClean";
-
+//const dataPath = "";
 const dataPath = "https://s3-us-west-2.amazonaws.com/metasub2017/";
 
 const loadData = callback => {
