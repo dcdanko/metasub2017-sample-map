@@ -14,23 +14,39 @@ if (!window.Promise) {
 import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
 import state from "./visualization-components/state";
 
-import loadData from "./dataLoad";
+//import loadData from "./dataLoad";
 import map from "./map";
 
 import citiesLayer from "./mapCitiesLayer";
-import {summarizeCitiesData, distance} from "./dataClean";
+import {summarizeCitiesData, distance, processCityData} from "./dataClean";
 import timeline from "./timeline";
 import menu from "./metadataMenu";
 import button from "./backButton";
 import readout from "./readout";
 
+d3.json("http://localhost:3000", (error, data) => {
+  console.log("NEW DATA");
+  console.log(data);
+  //console.log(processCityData(data));
+});
 
+// function loadmetadata({citiesData, callback}){
+//   d3.csv(dataPath + "data/metadata.csv", (error, metadata) =>{
+//     if (error){
+//       console.log(error);
+//       throw error;
+//     }else{
+//       callback({citiesData, metadata: formatmetadataMenu(metadata)});
+//     }
+//   });
+// }
 
-loadData(draw);
+//loadData(draw);
   
 
 
 function draw({citiesData, metadata}){
+  console.log("data loaded 2");
   d3.select("#data-loading").style("opacity",1).transition().duration(500).style("opacity",0).remove();
   const worldBounds = [[90,-180],[-80,180]];
   const defaultMetadata = {category: "", type: ""};

@@ -1,17 +1,4 @@
-export const processCitiesData = rawData => {
-  const cleanedData = rawData.map(rawCity => {
-    const cleanCity = Object.assign({}, rawCity);
-    if (cleanCity.id !== ""){
-      //cleanCity.path = `http://localhost:3000/${cleanCity.id}`;
-      cleanCity.path = `https://metasub-kobo-wrapper.herokuapp.com/${cleanCity.id}`;
-      cleanCity.live = true;
-    }else{
-      cleanCity.live = false;
-    }
-    return cleanCity;
-  });
-  return cleanedData;
-};
+
 
 const processSampleData = rawSamples => {
   const cleanSamples = rawSamples.map(d => {
@@ -24,6 +11,18 @@ const processSampleData = rawSamples => {
   }); //add filter here?
   return cleanSamples;
 };
+
+export const processCityData = rawCityData => {
+  const cleanCityData = rawCityData.map(d => {
+    const cleanCity = Object.assign({}, d);
+    if (cleanCity.live){
+      cleanCity.features = processSampleData(cleanCity.features);
+    }
+    return cleanCity;
+  });
+  return cleanCityData;
+}
+
 const getTimeExtent = points => d3
           .extent(points, d => d.time)
           .map((d,i) => i === 0 ? d3.timeHour.floor(d) : d3.timeHour.ceil(d));
