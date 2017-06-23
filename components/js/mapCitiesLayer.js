@@ -4,6 +4,8 @@ import tooltip from "./visualization-components/tooltip/tooltip.js";
 //const mapTooltip = tooltip().selection(d3.select(".leaflet-map-pane"));
 //const getPositionOnPage = () => [d3.event.pageX, d3.event.pageY];
 
+const formatCoordinates = d3.format(.7);
+
 const citiesLayer = mapOverlayLayer()
   .type("Point")
   .name("cities")
@@ -98,6 +100,7 @@ citiesLayer.updateTime = function(){
 
           mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
             .text([
+
               ["Location: ", `${d.name_full}`],
               ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
               ["Samples Taken: ", `${d._runningTotal}`]
@@ -123,10 +126,13 @@ citiesLayer.updateTime = function(){
         })
         .on("mouseover", function(d){
           const circlePos = d3.select(this).node().getBBox();
+
           mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
             .text([
-              ["Sampling Place: ", `${d.sampling_place}`],
-              ["Time Submitted: ", `${formatTime(d.time)}`]
+              ["Location: ", `(${formatCoordinates(d.lat)}, ${formatCoordinates(d.lon)})`],
+              ["Time Submitted: ", `${formatTime(d.time)}`],
+              ["Sampling Place: ", `${d.sampling_place}`]
+              
             ])
             .draw();
           console.log(d);
