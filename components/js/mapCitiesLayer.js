@@ -1,6 +1,7 @@
 import mapOverlayLayer from "./visualization-components/mapOverlay/mapOverlayLayer";
 import tooltip from "./visualization-components/tooltip/tooltip.js";
 
+
 //const mapTooltip = tooltip().selection(d3.select(".leaflet-map-pane"));
 //const getPositionOnPage = () => [d3.event.pageX, d3.event.pageY];
 
@@ -54,14 +55,6 @@ const citiesLayer = mapOverlayLayer()
         .on("mouseout", () => {
           mapTooltip.remove();
         });
-      // this._.inactiveCircles = group.selectAll(".map__city-circle--inactive")
-      //   .data(data.filter(d => !d.live))
-      //   .enter()
-      //   .append("circle")
-      //   .attrs({
-      //     class: "map__city-circle--inactive map__circle",
-      //     r:2
-      //   });
     }
 
     this.updateTime();
@@ -135,7 +128,35 @@ citiesLayer.updateTime = function(){
               
             ])
             .draw();
-          console.log(d);
+          if (d._attachments.length > 0){
+
+            console.log(d._attachments[0]);
+            //forEach.append.....
+            const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
+            console.log(imgPath);
+            mapTooltip.div().append("div").append("img").attrs({
+              src: imgPath
+            })
+            .styles({
+              "image-orientation": "from-image",
+              width:"100%",
+              "margin-top":"10px"
+            });
+            // const {div} = mapTooltip.props();
+            // loadImage(imgPath, img => {
+            //   div.node().appendChild(img);
+            //   console.log(img);
+            // }, {crossOrigin: "anonymous", orientation: true, maxWidth:300});
+
+          }
+
+        })
+        .on("click", d => {
+          if (d._attachments.length > 0){
+
+            const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
+            window.open(imgPath, "_blank");
+          }
         })
         .on("mousemove", () => {
           //mapTooltip.position(getPositionOnPage()).update();
