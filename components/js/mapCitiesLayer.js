@@ -134,19 +134,18 @@ citiesLayer.updateTime = function(){
             //forEach.append.....
             const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
             console.log(imgPath);
-            mapTooltip.div().append("div").append("img").attrs({
-              src: imgPath
-            })
-            .styles({
-              "image-orientation": "from-image",
-              width:"100%",
-              "margin-top":"10px"
-            });
-            // const {div} = mapTooltip.props();
-            // loadImage(imgPath, img => {
-            //   div.node().appendChild(img);
-            //   console.log(img);
-            // }, {crossOrigin: "anonymous", orientation: true, maxWidth:300});
+            mapTooltip.div().append("div").styles({
+              "margin-top": "5px",
+              "font-weight":"bold",
+            }).text("CLICK TO VIEW IMAGE");
+            // mapTooltip.div().append("div").append("img").attrs({
+            //   src: imgPath
+            // })
+            // .styles({
+            //   "image-orientation": "from-image",
+            //   width:"100%",
+            //   "margin-top":"10px"
+            // });
 
           }
 

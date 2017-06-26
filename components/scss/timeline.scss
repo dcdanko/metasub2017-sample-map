@@ -3,7 +3,7 @@
 //   stroke: $green-fill--solid
 
 .slider-circle{
-  z-index:1000;
+  z-index:950;
 }
 
 .timeline__axis path,
@@ -22,6 +22,7 @@
 }
 
 .timeline__area{
+  z-index:900;
   stroke: none;
   fill: $green-fill--low-opacity;
 }
@@ -37,3 +38,4 @@
 .timeline__label{
   fill:white;
 }
+
