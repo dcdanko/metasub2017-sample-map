@@ -21,6 +21,11 @@
   fill:none;
 }
 
+.timeline__area{
+  stroke: none;
+  fill: $green-fill--low-opacity;
+}
+
     
 .timeline__axis text{
     font-family: sans-serif;
