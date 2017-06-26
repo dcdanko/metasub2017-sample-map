@@ -66,7 +66,7 @@ const methods = {
       .yValue(d => d.length)
       .xScale(xScale)
       .yScale(yScale)
-      .selection(svg)
+      .selection(svg.append("g"))
       .draw();
   },
   updateLine(){
