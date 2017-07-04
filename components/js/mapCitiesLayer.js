@@ -118,22 +118,30 @@ citiesLayer.updateTime = function(){
           cursor:"pointer"
         })
         .on("mouseover", function(d){
+          console.log(d);
           const circlePos = d3.select(this).node().getBBox();
 
           mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
             .text([
               ["Location: ", `(${formatCoordinates(d.lat)}, ${formatCoordinates(d.lon)})`],
               ["Time Submitted: ", `${formatTime(d.time)}`],
-              ["Sampling Place: ", `${d.sampling_place}`]
+              ["Location Name: ", `${d.location}`],
+              ["Location Type: ", `${d.location_type}`],
+              ["Ground Level: ", `${d.ground_level}`],
+              ["Sampling Place: ", `${d.sampling_place}`],
+              ["Sampling Type: ", `${d.sampling_type}`],
+              ["Setting: ", `${d.setting}`],
+              ["Surface Material: ", `${d.surface_material}`],
+              ["Surface Sampling Protocol: ", `${d.surface_sampling_protocol}`]
               
             ])
             .draw();
           if (d._attachments.length > 0){
 
-            console.log(d._attachments[0]);
+            //console.log(d._attachments[0]);
             //forEach.append.....
             const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
-            console.log(imgPath);
+            //console.log(imgPath);
             mapTooltip.div().append("div").styles({
               "margin-top": "5px",
               "font-weight":"bold",
