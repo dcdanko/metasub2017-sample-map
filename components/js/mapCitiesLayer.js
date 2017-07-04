@@ -1,8 +1,11 @@
 import mapOverlayLayer from "./visualization-components/mapOverlay/mapOverlayLayer";
 import tooltip from "./visualization-components/tooltip/tooltip.js";
 
+
 //const mapTooltip = tooltip().selection(d3.select(".leaflet-map-pane"));
 //const getPositionOnPage = () => [d3.event.pageX, d3.event.pageY];
+
+const formatCoordinates = d3.format(.7);
 
 const citiesLayer = mapOverlayLayer()
   .type("Point")
@@ -52,14 +55,6 @@ const citiesLayer = mapOverlayLayer()
         .on("mouseout", () => {
           mapTooltip.remove();
         });
-      // this._.inactiveCircles = group.selectAll(".map__city-circle--inactive")
-      //   .data(data.filter(d => !d.live))
-      //   .enter()
-      //   .append("circle")
-      //   .attrs({
-      //     class: "map__city-circle--inactive map__circle",
-      //     r:2
-      //   });
     }
 
     this.updateTime();
@@ -98,6 +93,7 @@ citiesLayer.updateTime = function(){
 
           mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
             .text([
+
               ["Location: ", `${d.name_full}`],
               ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
               ["Samples Taken: ", `${d._runningTotal}`]
@@ -122,14 +118,52 @@ citiesLayer.updateTime = function(){
           cursor:"pointer"
         })
         .on("mouseover", function(d){
+          console.log(d);
           const circlePos = d3.select(this).node().getBBox();
+
           mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
             .text([
+              ["Location: ", `(${formatCoordinates(d.lat)}, ${formatCoordinates(d.lon)})`],
+              ["Time Submitted: ", `${formatTime(d.time)}`],
+              ["Location Name: ", `${d.location}`],
+              ["Location Type: ", `${d.location_type}`],
+              ["Ground Level: ", `${d.ground_level}`],
               ["Sampling Place: ", `${d.sampling_place}`],
-              ["Time Submitted: ", `${formatTime(d.time)}`]
+              ["Sampling Type: ", `${d.sampling_type}`],
+              ["Setting: ", `${d.setting}`],
+              ["Surface Material: ", `${d.surface_material}`],
+              ["Surface Sampling Protocol: ", `${d.surface_sampling_protocol}`]
+              
             ])
             .draw();
-          console.log(d);
+          if (d._attachments.length > 0){
+
+            //console.log(d._attachments[0]);
+            //forEach.append.....
+            const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
+            //console.log(imgPath);
+            mapTooltip.div().append("div").styles({
+              "margin-top": "5px",
+              "font-weight":"bold",
+            }).text("CLICK TO VIEW IMAGE");
+            // mapTooltip.div().append("div").append("img").attrs({
+            //   src: imgPath
+            // })
+            // .styles({
+            //   "image-orientation": "from-image",
+            //   width:"100%",
+            //   "margin-top":"10px"
+            // });
+
+          }
+
+        })
+        .on("click", d => {
+          if (d._attachments.length > 0){
+
+            const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
+            window.open(imgPath, "_blank");
+          }
         })
         .on("mousemove", () => {
           //mapTooltip.position(getPositionOnPage()).update();

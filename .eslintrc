@@ -14,7 +14,8 @@
   },
   "globals": {
     "d3": false,
-    "L": false
+    "L": false,
+    "loadImage":false
   },
   "rules": {
     "complexity": ["warn", 5],

@@ -18,28 +18,56 @@ import state from "./visualization-components/state";
 import map from "./map";
 
 import citiesLayer from "./mapCitiesLayer";
-import {summarizeCitiesData, distance, processCityData} from "./dataClean";
+import {summarizeCitiesData, distance, processCityData, formatmetadataMenu} from "./dataClean";
 import timeline from "./timeline";
 import menu from "./metadataMenu";
 import button from "./backButton";
 import readout from "./readout";
 
-d3.json("http://localhost:3000", (error, data) => {
+d3.json("https://metasub-kobo-wrapper-v2.herokuapp.com/", (error, data) => {
   console.log("NEW DATA");
   console.log(data);
-  //console.log(processCityData(data));
+  loadMetadata({citiesData:data, callback:draw})
 });
 
-// function loadmetadata({citiesData, callback}){
-//   d3.csv(dataPath + "data/metadata.csv", (error, metadata) =>{
-//     if (error){
-//       console.log(error);
-//       throw error;
-//     }else{
-//       callback({citiesData, metadata: formatmetadataMenu(metadata)});
-//     }
-//   });
-// }
+function loadMetadata({citiesData, callback}){
+  const dataPath = "https://s3-us-west-2.amazonaws.com/metasub2017/";
+  d3.csv(dataPath + "data/metadata.csv", (error, metadata) =>{
+    if (error){
+      console.log(error);
+      throw error;
+    }else{
+
+      const cityFeatureProto = {
+        getCurrentSamples({time, metadataFilter}){
+          if (metadataFilter.category === "" || metadataFilter.type === ""){
+            //console.log(time);
+            return this.features.filter(d => d.time <= time);
+          }else{
+            return this.features.filter(d => d.time <= time && d[metadataFilter.category] === metadataFilter.type);
+          }
+        },
+        getCurrentSampleCount({time, metadataFilter}){
+
+          return this.getCurrentSamples({time, metadataFilter}).length;
+        } 
+      };
+
+      citiesData.forEach(city => {
+        if (city.live){
+          city.features.forEach(d => {
+            d.time = new Date(d.end.slice(0,d.end.indexOf(".")));
+            d.lat = d._geolocation[0];
+            d.lon = d._geolocation[1];
+          });
+          Object.assign(city, cityFeatureProto);  
+        }
+      });
+
+      callback({citiesData, metadata: formatmetadataMenu(metadata)});
+    }
+  });
+}
 
 //loadData(draw);
   

@@ -102,10 +102,6 @@ export const addSampleDataToCities = ({citiesData, samplesData}) => {
         //filter out outlier points
         const processedSamples = processSampleData(samplesData[i]);
 
-        //   .filter(d => {
-        //     const distanceFromCenter = distance(parseFloat(cityWithSamples.lat), parseFloat(cityWithSamples.lon), d.lat, d.lon);
-        //     return distanceFromCenter < 500;
-        // });
         
         Object.assign(cityWithSamples, 
           {
