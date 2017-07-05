@@ -1,44 +1,21 @@
 
 
-const processSampleData = rawSamples => {
-  const cleanSamples = rawSamples.map(d => {
-    const cleanSample = Object.assign({}, d);
-    //cleanSample.time = new Date(cleanSample._submission_time);
-    cleanSample.time = new Date(cleanSample.end.slice(0,cleanSample.end.indexOf(".")));
-    cleanSample.lat = cleanSample._geolocation[0];
-    cleanSample.lon = cleanSample._geolocation[1];
-    return cleanSample;
-  }); //add filter here?
-  return cleanSamples;
-};
 
-export const processCityData = rawCityData => {
-  const cleanCityData = rawCityData.map(d => {
-    const cleanCity = Object.assign({}, d);
-    if (cleanCity.live){
-      cleanCity.features = processSampleData(cleanCity.features);
-    }
-    return cleanCity;
-  });
-  return cleanCityData;
-}
 
-const getTimeExtent = points => d3
-          .extent(points, d => d.time)
-          .map((d,i) => i === 0 ? d3.timeHour.floor(d) : d3.timeHour.ceil(d));
+const getTimeExtent = points => d3.extent(points, d => d.time)
+  .map((d,i) => i === 0 ? d3.timeHour.floor(d) : d3.timeHour.ceil(d));
+
 const getSampleFrequencyExtent = sampleFrequency => d3.extent(sampleFrequency, d => d.length);
+
 const getXScale = timeExtent => d3.scaleTime().domain(timeExtent);
+
 const getYScale = sampleFrequencyExtent => d3.scaleSqrt()
   .domain(sampleFrequencyExtent);
 
 const getSampleFrequency = ({samples, xScale}) => {
-
-
   const hourBins = d3.timeHours(
     d3.timeHour.offset(xScale.domain()[0], -1), 
     d3.timeHour.offset(xScale.domain()[1], 1));
-
-  // const hourBins = d3.timeHours(xScale.domain()[0], xScale.domain()[1]);
   
   const histogram = d3.histogram()
     .value(d => d.time)
@@ -81,44 +58,6 @@ export const distance = (lat1, lon1, lat2, lon2, unit) => {
   return dist;
 };
 
-export const addSampleDataToCities = ({citiesData, samplesData}) => {
-  const getCurrentSamples = function({time, metadataFilter}){
-    if (metadataFilter.category === "" || metadataFilter.type === ""){
-      return this.features.filter(d => d.time <= time);
-    }else{
-      return this.features.filter(d => d.time <= time && d[metadataFilter.category] === metadataFilter.type);
-    }
-    
-  };
-
-  const getCurrentSampleCount = function({time, metadataFilter}){
-    return this.getCurrentSamples({time, metadataFilter}).length;
-  };
-
-  const citiesDataWithSamples = citiesData.map((city, i) => {
-      const cityWithSamples = Object.assign({}, city);
-      //console.log(cityWithSamples);
-      if (cityWithSamples.live){
-        //filter out outlier points
-        const processedSamples = processSampleData(samplesData[i]);
-
-        
-        Object.assign(cityWithSamples, 
-          {
-            features: processedSamples,
-            
-            getCurrentSamples,
-            getCurrentSampleCount
-          }
-        );
-
-      }
-
-      return cityWithSamples;
-    });
-
-  return citiesDataWithSamples;
-};
 
 const summarizeCity = features => {
   return Object.assign(getSummary(features), {sampleCount: features.length});
@@ -166,10 +105,6 @@ export const summarizeCitiesData = ({data, metadataFilter}) => {
 export const formatmetadataMenu = rawmetadata => {
   const uniqueCategories = d3.set(rawmetadata.filter(d => d.category !== "")
     .map(d => d.category)).values();
-  // const processedmetadata = uniqueCategories.reduce((pv,cv) => {
-  //   pv[cv] = rawmetadata.filter(d => d.category === cv);
-  //   return pv;
-  // }, {});
   const processedmetadata = uniqueCategories.map(d => ({
       category: d,
       category_label: rawmetadata.filter(dd => dd.category === d)[0].category_label,
@@ -177,4 +112,32 @@ export const formatmetadataMenu = rawmetadata => {
     })).filter(d => d.category_label !== "");
 
   return processedmetadata;
+};
+
+export const processData = ({citiesData, metadata, callback}) => {
+  const cityFeatureProto = {
+    getCurrentSamples({time, metadataFilter}){
+      if (metadataFilter.category === "" || metadataFilter.type === ""){
+        return this.features.filter(d => d.time <= time);
+      }else{
+        return this.features.filter(d => d.time <= time && d[metadataFilter.category] === metadataFilter.type);
+      }
+    },
+    getCurrentSampleCount({time, metadataFilter}){
+
+      return this.getCurrentSamples({time, metadataFilter}).length;
+    } 
+  };
+
+  citiesData.forEach(city => {
+    if (city.live){
+      city.features.forEach(d => {
+        d.time = new Date(d.end.slice(0,d.end.indexOf(".")));
+        d.lat = d._geolocation[0];
+        d.lon = d._geolocation[1];
+      });
+      Object.assign(city, cityFeatureProto);  
+    }
+  });
+  callback({citiesData, metadata: formatmetadataMenu(metadata)}); 
 };

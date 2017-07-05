@@ -23,7 +23,8 @@ const methods = {
     return this;
   },
   update(){
-    const {readoutText, total, location, time, startTime, position} = this.props();
+    //add time, starttime...
+    const {readoutText, total, location, position} = this.props();
     let samplesTaken;
     if (total === 1){
       samplesTaken = "Sample Taken";
