@@ -15,15 +15,17 @@ import mapOverlay from "./visualization-components/mapOverlay/mapOverlay";
 import state from "./visualization-components/state";
 import map from "./map";
 import citiesLayer from "./mapCitiesLayer";
-import {summarizeCitiesData, distance, processData} from "./dataClean";
+import {summarizeCitiesData, processData} from "./dataClean";
 import timeline from "./timeline";
 import menu from "./metadataMenu";
 import button from "./backButton";
 import readout from "./readout";
+import getUpdateView from "./updateView";
+import constants from "./constants";
 
-//const dataPath = "http://localhost:3000/";
 const dataPath = "https://metasub-kobo-wrapper-v2.herokuapp.com/";
-
+const {worldBounds} = constants;
+const defaultMetadata = {category: "", type: ""};
 d3.json(dataPath, (error, data) => {
   const {citiesData, metadata} = data;
   processData({citiesData, metadata, callback:draw});
@@ -35,8 +37,8 @@ const removeLoadText = () => {
 
 function draw({citiesData, metadata}){
   removeLoadText();
-  const worldBounds = [[90,-180],[-80,180]];
-  const defaultMetadata = {category: "", type: ""};
+
+  
   const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
   const mapContainer = d3.select("#sample-map-2017");
 
@@ -123,7 +125,16 @@ function draw({citiesData, metadata}){
     .startTime(summarizedCitiesData.timeExtent[0])
     .location("Worldwide")
     .draw();
-
+  const updateView = getUpdateView({
+    citiesLayer, 
+    summarizedCitiesData, 
+    mapReadout,
+    mapTimeline,
+    d3Overlay,
+    sampleMap,
+    backButton,
+    metadataMenu
+  });
   mapState.registerCallback({
     metadataFilter(){
       const {metadataFilter, view} = this.props();
@@ -174,73 +185,7 @@ function draw({citiesData, metadata}){
       mapReadout.update();
 
     },
-    view(){
-      const {view} = this.props();
-      const svgPadding = .1;
-
-      citiesLayer.view(view);
-
-      if (view.view === "city"){
-        const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
-        const pointsInView = selectedCity.features.filter(d => {
-            const distanceFromCenter = distance(parseFloat(selectedCity.lat), parseFloat(selectedCity.lon), d.lat, d.lon);
-            return distanceFromCenter < 500;
-        });
-
-        mapReadout
-          .location(`in ${selectedCity.name_full}`)
-          .update();
-
-        const latExtent = d3.extent(pointsInView, d => d.lat);
-        const lonExtent = d3.extent(pointsInView, d => d.lon);
-        const newBounds = [[latExtent[1], lonExtent[0]], [latExtent[0], lonExtent[1]]];
-
-        mapTimeline
-          .data(selectedCity.sampleFrequency)
-          .xScale(selectedCity.xScale)
-          .yScale(selectedCity.yScale)
-          .updateView();
-
-        d3Overlay
-          .coordinateBounds(newBounds.map((d,i) => i === 0 ? [d[0] + svgPadding, d[1] - svgPadding] : [d[0] - svgPadding, d[1] + svgPadding]));
-
-        sampleMap.fitBounds(newBounds);
-        
-        citiesLayer
-          .data(selectedCity)
-          .draw();
-
-        backButton.draw();
-
-        metadataMenu.currentFeatures(selectedCity.features);
-      }else if (view.view === "world"){
-
-        mapReadout
-          .location("Worldwide")
-          .update();
-
-        d3Overlay
-          .coordinateBounds(worldBounds)
-          .update();
-
-        citiesLayer
-          .data(summarizedCitiesData.features)
-          .draw();
-
-        mapTimeline
-          .data(summarizedCitiesData.sampleFrequency)
-          .xScale(summarizedCitiesData.xScale)
-          .yScale(summarizedCitiesData.yScale)
-          .updateView();
-
-        sampleMap.fitBounds(worldBounds);
-
-        backButton.remove();
-
-        metadataMenu.currentFeatures(summarizedCitiesData.allSamples);
-      }
-      metadataMenu.updateView();
-    }
+    view: updateView
   });
 
   d3.select(window).on("resize", () => {
