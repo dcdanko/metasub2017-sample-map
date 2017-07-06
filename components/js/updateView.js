@@ -1,6 +1,23 @@
-import {distance} from "./dataClean";
 import constants from "./constants";
 const {worldBounds} = constants;
+
+const distance = (lat1, lon1, lat2, lon2, unit) => {
+  const radlat1 = Math.PI * lat1/180;
+  const radlat2 = Math.PI * lat2/180;
+  const theta = lon1-lon2;
+  const radtheta = Math.PI * theta/180;
+  let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+  dist = Math.acos(dist);
+  dist = dist * 180/Math.PI;
+  dist = dist * 60 * 1.1515;
+  if (unit==="K") { 
+    dist = dist * 1.609344; 
+  }
+  if (unit==="N") { 
+    dist = dist * 0.8684; 
+  }
+  return dist;
+};
 
 const getNewBounds = selectedCity => {
   const pointsInView = selectedCity.features.filter(d => {
@@ -12,26 +29,18 @@ const getNewBounds = selectedCity => {
   return [[latExtent[1], lonExtent[0]], [latExtent[0], lonExtent[1]]];
 };
 
-const getUpdateView = ({
-    citiesLayer, 
-    summarizedCitiesData, 
-    mapReadout,
-    mapTimeline,
-    d3Overlay,
-    sampleMap,
-    backButton,
-    metadataMenu
-}) =>  {
-  const updateCityView = view => {
-    const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
+
+  const updateCityView = function(){
+
+    const {view, data, components} = this.props();
+    const {citiesLayer, mapReadout, mapTimeline, d3Overlay, sampleMap, backButton, metadataMenu} = components;
+    const selectedCity = data.features.filter(d => d.id === view.city)[0];
     const newBounds = getNewBounds(selectedCity);
     const svgPadding = .1;
 
     mapReadout
       .location(`in ${selectedCity.name_full}`)
       .update();
-
-    
 
     mapTimeline
       .data(selectedCity.sampleFrequency)
@@ -53,7 +62,9 @@ const getUpdateView = ({
     metadataMenu.currentFeatures(selectedCity.features);
   };
 
-  const updateWorldView = () => {
+  const updateWorldView = function(){
+    const {data, components} = this.props();
+    const {citiesLayer, mapReadout, mapTimeline, d3Overlay, sampleMap, backButton, metadataMenu} = components;
     mapReadout
       .location("Worldwide")
       .update();
@@ -63,37 +74,35 @@ const getUpdateView = ({
       .update();
 
     citiesLayer
-      .data(summarizedCitiesData.features)
+      .data(data.features)
       .draw();
 
     mapTimeline
-      .data(summarizedCitiesData.sampleFrequency)
-      .xScale(summarizedCitiesData.xScale)
-      .yScale(summarizedCitiesData.yScale)
+      .data(data.sampleFrequency)
+      .xScale(data.xScale)
+      .yScale(data.yScale)
       .updateView();
 
     sampleMap.fitBounds(worldBounds);
-
     backButton.remove();
-
-    metadataMenu.currentFeatures(summarizedCitiesData.allSamples);
+    metadataMenu.currentFeatures(data.allSamples);
   };
 
 
   const updateView = function(){
-    const {view} = this.props();
-    
-      citiesLayer.view(view);
-      metadataMenu.updateView();
+    const {view, components} = this.props();
+    const {citiesLayer, metadataMenu} = components;
+    citiesLayer.view(view);
+    metadataMenu.updateView();
 
-      if (view.view === "city"){
-        updateCityView(view);
-      }else if (view.view === "world"){
-        updateWorldView();
-      }
-      
-  };
-  return updateView;
+    if (view.view === "city"){
+      updateCityView.call(this,view);
+    }else if (view.view === "world"){
+      updateWorldView.call(this);
+    }
+    
 };
 
-export default getUpdateView;
+
+
+export default updateView;

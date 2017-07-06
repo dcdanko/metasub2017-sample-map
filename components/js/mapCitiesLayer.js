@@ -71,6 +71,7 @@ citiesLayer.getGlobalSampleTotal = function(){
 
 citiesLayer.getCitySampleTotal = function(){
   const {overlayCircles} = this.props();
+
   return overlayCircles.data().length;
 };
 
@@ -81,35 +82,34 @@ citiesLayer.updateTime = function(){
       const {overlayCircles, radiusScale} = this.props();
       
       overlayCircles
-      .each(d => {
-        d._runningTotal = d.getCurrentSampleCount({time, metadataFilter});
-      })
-      .attrs({
-        r: d => radiusScale(d._runningTotal)
-      })
-      .on("mouseover", function(d){
-        //d3.select(this).style("fill","red");
-          const circlePos = d3.select(this).node().getBBox();
+        .each(d => {
+          d._runningTotal = d.getCurrentSampleCount({time, metadataFilter});
+        })
+        .attrs({
+          r: d => radiusScale(d._runningTotal)
+        })
+        .on("mouseover", function(d){
+          //d3.select(this).style("fill","red");
+            const circlePos = d3.select(this).node().getBBox();
 
-          mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
-            .text([
+            mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
+              .text([
 
-              ["Location: ", `${d.name_full}`],
-              ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
-              ["Samples Taken: ", `${d._runningTotal}`]
-            ])
-            .draw();
-        });
+                ["Location: ", `${d.name_full}`],
+                ["Time Period: ", `${formatTime(startTime)} - ${formatTime(time)}`],
+                ["Samples Taken: ", `${d._runningTotal}`]
+              ])
+              .draw();
+          });
     }else if (view.view === "city"){
       const {data, group, map} = this.props();
       this._.overlayCircles = group.selectAll(".map__city-circle")
-        .data(data.getCurrentSamples({time, metadataFilter}));
-      const {overlayCircles} =this.props();
+        .data(data.getCurrentSamples({time, metadataFilter}), d => d._id);
 
-      overlayCircles
+      this._.overlayCircles
         .enter()
         .append("circle")
-        .merge(overlayCircles)
+        .merge(this._.overlayCircles)
         .attrs({
           class: "map__city-circle map__circle",
           r: 4,
@@ -120,7 +120,6 @@ citiesLayer.updateTime = function(){
         .on("mouseover", function(d){
           console.log(d);
           const circlePos = d3.select(this).node().getBBox();
-
           mapTooltip.position([circlePos.x + circlePos.width, circlePos.y + circlePos.height])
             .text([
               ["Location: ", `(${formatCoordinates(d.lat)}, ${formatCoordinates(d.lon)})`],
@@ -137,42 +136,25 @@ citiesLayer.updateTime = function(){
             ])
             .draw();
           if (d._attachments.length > 0){
-
-            //console.log(d._attachments[0]);
-            //forEach.append.....
-            // const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
-            //console.log(imgPath);
             mapTooltip.div().append("div").styles({
               "margin-top": "5px",
               "font-weight":"bold",
             }).text("CLICK TO VIEW IMAGE");
-            // mapTooltip.div().append("div").append("img").attrs({
-            //   src: imgPath
-            // })
-            // .styles({
-            //   "image-orientation": "from-image",
-            //   width:"100%",
-            //   "margin-top":"10px"
-            // });
-
           }
-
         })
         .on("click", d => {
           if (d._attachments.length > 0){
-
             const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
             window.open(imgPath, "_blank");
           }
-        })
-        .on("mousemove", () => {
-          //mapTooltip.position(getPositionOnPage()).update();
         })
         .on("mouseout", () => {
           mapTooltip.remove();
         });
 
-      overlayCircles.exit().remove();
+     this._.overlayCircles.exit().remove();
+     this._.overlayCircles = group.selectAll(".map__city-circle");
+
     }
 
   };

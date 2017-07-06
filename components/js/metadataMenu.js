@@ -73,7 +73,7 @@ const methods = {
         }
         console.log(d);
         if (metadataFilter.type !== ""){
-
+          
           onClick({category: "", type: ""});
         }
         
@@ -126,6 +126,7 @@ const methods = {
         const {metadataFilter} = this.props();
         
         if (metadataFilter.category === d.category && metadataFilter.type === d.type && metadataFilter.category !== ""){
+          console.log("CLEAR CATEGORY");
           onClick({category: "", type: ""});
         }else{
           onClick({category: d.category, type: d.type});

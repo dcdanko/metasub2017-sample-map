@@ -20,7 +20,8 @@ import timeline from "./timeline";
 import menu from "./metadataMenu";
 import button from "./backButton";
 import readout from "./readout";
-import getUpdateView from "./updateView";
+import updateView from "./updateView";
+import updateMetadata from "./updateMetadata";
 import constants from "./constants";
 
 const dataPath = "https://metasub-kobo-wrapper-v2.herokuapp.com/";
@@ -46,12 +47,14 @@ function draw({citiesData, metadata}){
   const mapState = state()
     .defaultValues({
       data: summarizedCitiesData,
+      rawCitiesData: citiesData,
       filteredData: summarizedCitiesData,
       width: mapContainer.node().getBoundingClientRect().width,
       view: {view: "world", city:""},
       metadataFilter: defaultMetadata,
       time: summarizedCitiesData.timeExtent[1],
-      totalSamples: 0
+      totalSamples: 0,
+      components: {}
     });
 
   if (mapState.width() >= 992){
@@ -125,40 +128,20 @@ function draw({citiesData, metadata}){
     .startTime(summarizedCitiesData.timeExtent[0])
     .location("Worldwide")
     .draw();
-  const updateView = getUpdateView({
+
+  mapState.update({components:{
     citiesLayer, 
-    summarizedCitiesData, 
     mapReadout,
     mapTimeline,
     d3Overlay,
     sampleMap,
     backButton,
     metadataMenu
-  });
+  }
+});
+
   mapState.registerCallback({
-    metadataFilter(){
-      const {metadataFilter, view} = this.props();
-      let filteredData = summarizeCitiesData({data:citiesData, metadataFilter:metadataFilter});
-
-      if (view.view === "city"){
-        filteredData = filteredData.features.filter(d => d.id === view.city)[0];
-      }
-
-      citiesLayer.metadataFilter(metadataFilter);
-      
-      metadataMenu
-        .metadataFilter(metadataFilter)
-        .updateFilter();
-
-      mapTimeline
-        .data(filteredData.sampleFrequency)
-        .xScale(filteredData.xScale)
-        .yScale(filteredData.yScale)
-        .updateView();
-
-      mapState
-        .update({time: filteredData.timeExtent[1]});
-    },
+    metadataFilter: updateMetadata,
     width(){
       const {width} = this.props();
       mapTimeline
@@ -176,10 +159,13 @@ function draw({citiesData, metadata}){
       citiesLayer
         .time(time)
         .updateTime();
+      
+      //citiesLayer.updateTime();
 
       if (view.view === "world"){
         mapReadout.total(citiesLayer.getGlobalSampleTotal());
       }else if (view.view === "city"){
+        console.log("CITY TOTAL", citiesLayer.getCitySampleTotal());
         mapReadout.total(citiesLayer.getCitySampleTotal());
       }
       mapReadout.update();
