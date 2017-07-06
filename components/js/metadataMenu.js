@@ -7,7 +7,8 @@ const props = getObjectWithPropMethods([
   "position",
   "onClick",
   "metadataFilter",
-  "currentFeatures"
+  "currentFeatures",
+  "time"
 ]);
 
 const methods = {
@@ -101,7 +102,7 @@ const methods = {
       .features
       .filter(d => currentTypes.includes(d.type));
     
-    const getTypeCount = type => currentTypes.filter(d => d === type).length;
+   
     
     const menuContainerRect = this._.menuContainer.node().getBoundingClientRect();
     const topOffset = 10;
@@ -128,7 +129,7 @@ const methods = {
       .attrs({
         class: d => `menu__types-row menu__types-row--${d.type}`
       })
-      .text(d => `${d.type_label} (${getTypeCount(d.type)})`)
+      .text(d => `${d.type_label}`)
       .on("click", d => {
         const {metadataFilter} = this.props();
         
@@ -138,9 +139,23 @@ const methods = {
           onClick({category: d.category, type: d.type});
         }
       });
-
+      this.drawTypeCounts();
       this._.typesContainer.transition().duration(500).style("opacity",1);
 
+  },
+  drawTypeCounts(){
+    const {currentFeatures, types, category} = this.props();
+    const getTypeCount = type => currentFeatures
+      .filter(d => d[category] === type).length;
+    this._.typeCounts = types.append("span").text(d => ` (${getTypeCount(d.type)})`);
+  },
+  updateTime(){
+    const {typeCounts, currentFeatures, time, category} = this.props();
+    const getTypeCount = type => currentFeatures
+      .filter(d => d[category] === type && d.time <= time).length;
+    if (typeCounts !== undefined){
+      typeCounts.text(d =>` (${getTypeCount(d.type)})`);
+    }
   },
   updateOpenStatus(){
     const {menuContainer, isOpen} = this.props();

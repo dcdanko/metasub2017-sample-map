@@ -105,6 +105,7 @@ function draw({citiesData, metadata}){
     .selection(mapContainer)
     .metadataFilter(defaultMetadata)
     .data(metadata)
+    .time(mapState.time())
     .onClick(newMetadataFilter => mapState.update({
         metadataFilter:newMetadataFilter}))
     .draw();
@@ -155,6 +156,10 @@ function draw({citiesData, metadata}){
       mapTimeline
         .time(time)
         .updateTime();
+
+      // metadataMenu
+      //   .time(time)
+      //   .updateTime();
 
       citiesLayer
         .time(time)
