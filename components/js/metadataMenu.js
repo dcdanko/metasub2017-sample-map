@@ -44,7 +44,6 @@ const methods = {
       .text("Filter Map by Metadata");
   },
   drawCategories(){
-
     const {menuContainer, data, onClick} = this.props();
 
     this._.menuRows = menuContainer
@@ -71,9 +70,7 @@ const methods = {
           this.updateCategory();
           this.removeTypes();
         }
-        console.log(d);
         if (metadataFilter.type !== ""){
-          
           onClick({category: "", type: ""});
         }
         
@@ -92,25 +89,35 @@ const methods = {
   },
   removeTypes(){
     const {menuContainer} = this.props();
-    menuContainer.selectAll(".menu__types-container").remove();
+    menuContainer.selectAll(".menu__types-container").transition().duration(500).style("opacity",0).remove();
   },
   drawTypes(){
     const {menuContainer, currentFeatures, category, data, onClick} = this.props();
     this.removeTypes();
-
     //filter out all metadata types that are not present in current sample set
     const currentTypes = currentFeatures.map(d => d[category]);
-
     const types = data
       .filter(d => d.category === category)[0]
       .features
       .filter(d => currentTypes.includes(d.type));
+    
+    const getTypeCount = type => currentTypes.filter(d => d === type).length;
+    
+    const menuContainerRect = this._.menuContainer.node().getBoundingClientRect();
+    const topOffset = 10;
 
     this._.typesContainer = menuContainer
-      .select(`.menu__row-container--${category}`)
+      //.select(`.menu__row-container--${category}`)
       .append("div")
       .attrs({
         class: "menu__types-container"
+      })
+      .styles({
+        position: "absolute",
+        left: `${menuContainerRect.width}px`,
+        "max-height": `${menuContainerRect.height - topOffset}px`,
+        top: `${topOffset}px`,
+        opacity:0
       });
 
     this._.types = this._.typesContainer
@@ -121,18 +128,19 @@ const methods = {
       .attrs({
         class: d => `menu__types-row menu__types-row--${d.type}`
       })
-      .text(d => d.type_label)
+      .text(d => `${d.type_label} (${getTypeCount(d.type)})`)
       .on("click", d => {
         const {metadataFilter} = this.props();
         
         if (metadataFilter.category === d.category && metadataFilter.type === d.type && metadataFilter.category !== ""){
-          console.log("CLEAR CATEGORY");
           onClick({category: "", type: ""});
         }else{
           onClick({category: d.category, type: d.type});
         }
-
       });
+
+      this._.typesContainer.transition().duration(500).style("opacity",1);
+
   },
   updateOpenStatus(){
     const {menuContainer, isOpen} = this.props();

@@ -159,13 +159,10 @@ function draw({citiesData, metadata}){
       citiesLayer
         .time(time)
         .updateTime();
-      
-      //citiesLayer.updateTime();
 
       if (view.view === "world"){
         mapReadout.total(citiesLayer.getGlobalSampleTotal());
       }else if (view.view === "city"){
-        console.log("CITY TOTAL", citiesLayer.getCitySampleTotal());
         mapReadout.total(citiesLayer.getCitySampleTotal());
       }
       mapReadout.update();

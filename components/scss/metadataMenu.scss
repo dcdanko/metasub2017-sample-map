@@ -45,9 +45,13 @@
 
 .menu__types-container{
   color:white;
-  margin-top:10px;
-  margin-left:65px;
+  //margin-top:10px;
+  margin-left:50px;
+  padding-right:15px;
   font-size:14px;
+  width:185px;
+  //max-height:200px;
+  overflow-y:auto;
 }
 
 .menu__row-container{
@@ -58,7 +62,7 @@
 
 .menu__types-row{
   cursor:pointer;
-  margin-bottom:5px;
+  margin-bottom:10px;
 }
 
 .menu__title:hover{
