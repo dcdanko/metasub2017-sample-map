@@ -54,6 +54,15 @@
   overflow-y:auto;
 }
 
+.menu__types-container::-webkit-scrollbar{
+  -webkit-box-shadow: inset 0 0 3px $green-fill--high-opacity;
+	background:transparent;
+}
+
+.menu__types-container::-webkit-scrollbar-thumb{
+  background:$green-fill--high-opacity !important;
+}
+
 .menu__row-container{
   max-height:200px;
   padding-right:15px;
