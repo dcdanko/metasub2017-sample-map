@@ -140,7 +140,7 @@ citiesLayer.updateTime = function(){
 
             //console.log(d._attachments[0]);
             //forEach.append.....
-            const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
+            // const imgPath = "https://kc.kobotoolbox.org/attachment/original?media_file=" + d._attachments[0].filename;
             //console.log(imgPath);
             mapTooltip.div().append("div").styles({
               "margin-top": "5px",

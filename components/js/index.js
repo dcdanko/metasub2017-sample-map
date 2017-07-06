@@ -29,28 +29,15 @@ d3.json(dataPath, (error, data) => {
   processData({citiesData, metadata, callback:draw});
 });
 
-
-
-//loadData(draw);
-  
-
+const removeLoadText = () => {
+  d3.select("#data-loading").style("opacity",1).transition().duration(500).style("opacity",0).remove();
+};
 
 function draw({citiesData, metadata}){
-  console.log("data loaded 2");
-  d3.select("#data-loading").style("opacity",1).transition().duration(500).style("opacity",0).remove();
+  removeLoadText();
   const worldBounds = [[90,-180],[-80,180]];
   const defaultMetadata = {category: "", type: ""};
-  //const defaultMetadata2 = {category:"sampling_place", type:"seat"};
-
   const summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
-
-  // summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata2});
-  // summarizedCitiesData = summarizeCitiesData({data:citiesData, metadataFilter:defaultMetadata});
-  
-  //const worldBounds = [[80,-180],[-80,180]];
-
-
-
   const mapContainer = d3.select("#sample-map-2017");
 
 
@@ -82,12 +69,10 @@ function draw({citiesData, metadata}){
     .time(mapState.time())
     .onCityClick(d => {
       mapState.update({
-        //metadataFilter: Object.assign({},defaultMetadata, {view:"city"}),
         metadataFilter: defaultMetadata,
         view:{view: "city", city: d.id}, 
         time: d.timeExtent[1]//thismight not work
       });
-      //mapState.update();
     })
     .data(summarizedCitiesData.features);
 
@@ -95,15 +80,11 @@ function draw({citiesData, metadata}){
 
   const d3Overlay = mapOverlay()
     .coordinateBounds(worldBounds)
-    //.coordinateBounds([[42.96, -78.94], [42.832, -78.782]])
     .addVectorLayer(citiesLayer)
     .addTo(sampleMap);
 
   syncOverlayWithBasemap({map:sampleMap, d3Overlay});
 
-
-
-  //send summarized line dataset to 
   const mapTimeline = timeline()
     .data(summarizedCitiesData.sampleFrequency)
     .drag(newTime => mapState.update({time: newTime}))
@@ -113,16 +94,13 @@ function draw({citiesData, metadata}){
     .time(mapState.time())
     .selection(mapContainer)
     .draw();
-  console.log(summarizedCitiesData);
 
   const metadataMenu = menu()
     .currentFeatures(summarizedCitiesData.allSamples)
     .selection(mapContainer)
     .metadataFilter(defaultMetadata)
     .data(metadata)
-
     .onClick(newMetadataFilter => mapState.update({
-      //data: summarizeCitiesData({data:citiesData, metadataFilter:newMetadataFilter}),
         metadataFilter:newMetadataFilter}))
     .draw();
 
@@ -133,11 +111,6 @@ function draw({citiesData, metadata}){
       view:{view: "world"},
       time: summarizedCitiesData.timeExtent[1]
     }));
-
-  //readout--view, metadataFilter, total, time (start/finish)
-
-  // console.log(summarizedCitiesData.allSamples.length);
-  // console.log(mapTimeline.height(), mapTimeline.padding());
 
   const mapReadout = readout()
     .selection(mapContainer)
@@ -154,10 +127,7 @@ function draw({citiesData, metadata}){
   mapState.registerCallback({
     metadataFilter(){
       const {metadataFilter, view} = this.props();
-
-
       let filteredData = summarizeCitiesData({data:citiesData, metadataFilter:metadataFilter});
-      // citiesLayer.data(filteredData.features);
 
       if (view.view === "city"){
         filteredData = filteredData.features.filter(d => d.id === view.city)[0];
@@ -168,9 +138,6 @@ function draw({citiesData, metadata}){
       metadataMenu
         .metadataFilter(metadataFilter)
         .updateFilter();
-
-      //readout--filteredData.getTotal()...
-      //could calculate here, update 'totals' variable in cities layer
 
       mapTimeline
         .data(filteredData.sampleFrequency)
@@ -183,14 +150,11 @@ function draw({citiesData, metadata}){
     },
     width(){
       const {width} = this.props();
-
       mapTimeline
         .width(width)
         .updateSize();
-
       mapReadout.position({bottom: mapTimeline.height()})
         .update();
-
     },
     time(){
       const {time, view} = this.props();
@@ -204,7 +168,6 @@ function draw({citiesData, metadata}){
 
       if (view.view === "world"){
         mapReadout.total(citiesLayer.getGlobalSampleTotal());
-        console.log();
       }else if (view.view === "city"){
         mapReadout.total(citiesLayer.getCitySampleTotal());
       }
@@ -212,12 +175,10 @@ function draw({citiesData, metadata}){
 
     },
     view(){
-      const {view, data} = this.props();
-      console.log(view);
+      const {view} = this.props();
       const svgPadding = .1;
 
       citiesLayer.view(view);
-      //DEFINE DATA SUBSET HERE?
 
       if (view.view === "city"){
         const selectedCity = summarizedCitiesData.features.filter(d => d.id === view.city)[0];
@@ -281,7 +242,6 @@ function draw({citiesData, metadata}){
       metadataMenu.updateView();
     }
   });
-  //mapState.update({view:{view: "city", city: "104862"}});
 
   d3.select(window).on("resize", () => {
     mapState.update({width: mapContainer.node().getBoundingClientRect().width});
