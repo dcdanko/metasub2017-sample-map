@@ -183,11 +183,7 @@ function draw({citiesData, metadata}){
     },
     width(){
       const {width} = this.props();
-      // if (width >= 992){
-      //   summarizedCitiesData.radiusScale.range([4,30]);
-      // }else{
-      //   summarizedCitiesData.radiusScale.range([4,20]);
-      // }
+
       mapTimeline
         .width(width)
         .updateSize();
