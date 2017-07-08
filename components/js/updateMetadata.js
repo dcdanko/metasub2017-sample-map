@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {summarizeCitiesData} from "./dataClean";
 
 const updateMetadata = function(){

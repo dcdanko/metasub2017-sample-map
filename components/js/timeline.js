@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {getObjectWithPropMethods} from "./visualization-components/utils";
 import axes from "./visualization-components/histogram/axes";
 import line from "./visualization-components/lineChart/line";

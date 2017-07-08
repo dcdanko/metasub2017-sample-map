@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import mapOverlayLayer from "./visualization-components/mapOverlay/mapOverlayLayer";
 import tooltip from "./visualization-components/tooltip/tooltip.js";
 

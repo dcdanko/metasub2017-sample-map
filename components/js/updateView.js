@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import constants from "./constants";
 const {worldBounds} = constants;
 

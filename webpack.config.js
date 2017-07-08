@@ -5,8 +5,8 @@ module.exports = {
          map: "./components/js/index.js"
     },
     output: {
-        path: path.join(__dirname, 'example'),
-        publicPath:"/example",
+        path: path.join(__dirname, 'build'),
+        publicPath:"/build",
         filename: "[name].js"
     },
     watch: true,

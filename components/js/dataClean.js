@@ -1,6 +1,4 @@
-
-
-
+/* eslint-disable */
 
 const getTimeExtent = points => d3.extent(points, d => d.time)
   .map((d,i) => i === 0 ? d3.timeHour.floor(d) : d3.timeHour.ceil(d));

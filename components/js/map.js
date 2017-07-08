@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const getMap = function(bounds){
   const map = L.map("map", {
     zoomControl: false

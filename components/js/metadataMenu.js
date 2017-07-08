@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {getObjectWithPropMethods} from "./visualization-components/utils";
 
 const props = getObjectWithPropMethods([
