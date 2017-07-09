@@ -1,33 +1,33 @@
-/* eslint-disable */
 
-import {getObjectWithPropMethods} from "./visualization-components/utils";
+
+import { getObjectWithPropMethods } from './visualization-components/utils';
 
 const props = getObjectWithPropMethods([
-  "selection",
-  "onClick"
+  'selection',
+  'onClick',
 ]);
 
 const methods = {
-  draw(){
-    const {selection, onClick} = this.props();
-    selection.append("span")
+  draw() {
+    const { selection, onClick } = this.props();
+    selection.append('span')
       .attrs({
-        class: "back-button"
+        class: 'back-button',
       })
-      .on("click", onClick)
-      .text("Back");
+      .on('click', onClick)
+      .text('Back');
     return this;
   },
-  remove(){
-    const {selection} = this.props();
-    selection.selectAll(".back-button").remove();
-  }
+  remove() {
+    const { selection } = this.props();
+    selection.selectAll('.back-button').remove();
+  },
 };
 
 const button = () => {
-  const defaultProps = {_:{
+  const defaultProps = { _: {
 
-    }
+  },
   };
   return Object.assign(defaultProps, props, methods);
 };

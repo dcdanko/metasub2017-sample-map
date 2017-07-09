@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 
 import {processCitiesData, addSampleDataToCities, formatmetadataMenu} from "./dataClean";
 //const dataPath = "";
