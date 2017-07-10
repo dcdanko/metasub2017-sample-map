@@ -68,8 +68,10 @@ const citiesLayer = mapOverlayLayer()
 const formatTime = d3.timeFormat('%m/%d/%Y');
 
 citiesLayer.getGlobalSampleTotal = function () {
-  const { overlayCircles } = this.props();
-  return d3.sum(overlayCircles.data(), d => d.runningTotal);
+  const { overlayCircles, runningTotal } = this.props();
+  const total = d3.sum(overlayCircles.nodes(), d => runningTotal.get(d));
+  return total;
+  // return d3.sum(overlayCircles.data(), d => d.runningTotal);
 };
 
 citiesLayer.getCitySampleTotal = function () {
@@ -83,7 +85,8 @@ citiesLayer.updateTime = function () {
 
   if (view.view === 'world') {
     const { overlayCircles, radiusScale } = this.props();
-    const runningTotal = d3.local();
+    this._.runningTotal = d3.local();
+    const { runningTotal } = this.props();
 
     overlayCircles
         .each(function setRunningTotal(d) {
