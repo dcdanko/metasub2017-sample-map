@@ -1,7 +1,10 @@
-/* eslint-disable */
-
 const getTimeExtent = points => d3.extent(points, d => d.time)
-  .map((d, i) => i === 0 ? d3.timeHour.floor(d) : d3.timeHour.ceil(d));
+  .map((d, i) => {
+    if (i === 0) {
+      return d3.timeHour.floor(d);
+    }
+    return d3.timeHour.ceil(d);
+  });
 
 const getSampleFrequencyExtent = sampleFrequency => d3.extent(sampleFrequency, d => d.length);
 
@@ -39,7 +42,10 @@ const getSummary = (points) => {
 };
 
 
-const summarizeCity = features => Object.assign(getSummary(features), { sampleCount: features.length });
+const summarizeCity = features => Object.assign(
+  getSummary(features),
+  { sampleCount: features.length },
+);
 
 export const summarizeCitiesData = ({ data, metadataFilter }) => {
   const summarizedCities = data.map((d) => {
@@ -51,7 +57,11 @@ export const summarizeCitiesData = ({ data, metadataFilter }) => {
         return feature[metadataFilter.category] === metadataFilter.type;
       });
 
-      const summarizedCity = Object.assign(summarizeCity(filteredFeatures), d, { features: filteredFeatures });
+      const summarizedCity = Object.assign(
+        summarizeCity(filteredFeatures),
+        d,
+        { features: filteredFeatures },
+      );
 
       return summarizedCity;
     }
@@ -93,24 +103,30 @@ export const processData = ({ citiesData, metadata, callback }) => {
       if (metadataFilter.category === '' || metadataFilter.type === '') {
         return this.features.filter(d => d.time <= time);
       }
-      return this.features.filter(d => d.time <= time && d[metadataFilter.category] === metadataFilter.type);
+      return this.features.filter(d => d.time <= time &&
+        d[metadataFilter.category] === metadataFilter.type);
     },
     getCurrentSampleCount({ time, metadataFilter }) {
       return this.getCurrentSamples({ time, metadataFilter }).length;
     },
   };
 
-  citiesData.forEach((city) => {
+  const cleanCitiesData = citiesData.map((city) => {
+    const cityCopy = Object.assign({}, city);
     if (city.live) {
-      city.features.forEach((d) => {
-        d.time = new Date(d.end.slice(0, d.end.indexOf('.')));
-        d.lat = d._geolocation[0]; // eslint-disable-line no-underscore-dangle
-        d.lon = d._geolocation[1]; // eslint-disable-line no-underscore-dangle
-        d.attachments = d._attachments; // eslint-disable-line no-underscore-dangle
-        d.id = d._id; // eslint-disable-line no-underscore-dangle
+      cityCopy.features = city.features.map((feature) => {
+        const featureCopy = Object.assign({}, feature);
+        featureCopy.time = new Date(feature.end.slice(0, feature.end.indexOf('.')));
+        featureCopy.lat = feature._geolocation[0]; // eslint-disable-line no-underscore-dangle
+        featureCopy.lon = feature._geolocation[1]; // eslint-disable-line no-underscore-dangle
+        featureCopy.attachments = feature._attachments; // eslint-disable-line no-underscore-dangle
+        featureCopy.id = feature._id; // eslint-disable-line no-underscore-dangle
+        return featureCopy;
       });
-      Object.assign(city, cityFeatureProto);
     }
+    Object.assign(cityCopy, cityFeatureProto);
+    return cityCopy;
   });
-  callback({ citiesData, metadata: formatmetadataMenu(metadata) });
+
+  callback({ citiesData: cleanCitiesData, metadata: formatmetadataMenu(metadata) });
 };

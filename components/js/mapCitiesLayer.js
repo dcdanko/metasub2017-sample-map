@@ -14,7 +14,7 @@ const citiesLayer = mapOverlayLayer()
   .name('cities')
   .render('Vector')
   .addPropMethods(['onCityClick', 'view', 'time', 'startTime', 'radiusScale', 'metadataFilter', 'tooltip'])
-  .draw(function () {
+  .draw(function draw() {
     const { data, group, view, map, onCityClick } = this.props();
 
     this._.mapTooltip = Tooltip().selection(d3.select(map.getPanes().overlayPane));
@@ -67,20 +67,20 @@ const citiesLayer = mapOverlayLayer()
 
 const formatTime = d3.timeFormat('%m/%d/%Y');
 
-citiesLayer.getGlobalSampleTotal = function () {
+citiesLayer.getGlobalSampleTotal = function getGlobalSampleTotal() {
   const { overlayCircles, runningTotal } = this.props();
   const total = d3.sum(overlayCircles.nodes(), d => runningTotal.get(d));
   return total;
   // return d3.sum(overlayCircles.data(), d => d.runningTotal);
 };
 
-citiesLayer.getCitySampleTotal = function () {
+citiesLayer.getCitySampleTotal = function getCitySampleTotal() {
   const { overlayCircles } = this.props();
 
   return overlayCircles.data().length;
 };
 
-citiesLayer.updateTime = function () {
+citiesLayer.updateTime = function updateTime() {
   const { view, time, startTime, metadataFilter, mapTooltip } = this.props();
 
   if (view.view === 'world') {
@@ -97,7 +97,7 @@ citiesLayer.updateTime = function () {
             return radiusScale(runningTotal.get(this));
           },
         })
-        .on('mouseover', function (d) {
+        .on('mouseover', function mouseover(d) {
           // d3.select(this).style("fill","red");
           const circlePos = d3.select(this).node().getBBox();
 

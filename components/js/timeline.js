@@ -161,7 +161,6 @@ const methods = {
     this.resizeSlider();
   },
   updateView() {
-    console.log('UPDATE VIEW');
     this.setScales();
     this.updateAxes();
     this.updateLine();

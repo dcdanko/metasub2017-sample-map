@@ -43,7 +43,7 @@ const syncOverlayWithBasemap = ({ sampleMap, d3Overlay }) => {
   sampleMap.on('moveend', () => d3Overlay.update());
 };
 
-function draw({ citiesData, metadata }) {
+const draw = ({ citiesData, metadata }) => {
   removeLoadText();
 
   const summarizedCitiesData = summarizeCitiesData({
@@ -187,7 +187,7 @@ function draw({ citiesData, metadata }) {
   d3.select(window).on('resize', () => {
     mapState.update({ width: mapContainer.node().getBoundingClientRect().width });
   });
-}
+};
 
 d3.json(dataPath, (error, data) => {
   const { citiesData, metadata } = data;

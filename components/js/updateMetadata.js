@@ -2,8 +2,7 @@
 
 import { summarizeCitiesData } from './dataClean';
 
-const updateMetadata = function () {
-  console.log('UPDATE METADATA');
+const updateMetadata = function updateMetadata() {
   const { metadataFilter, rawCitiesData, view, components } = this.props();
   const { citiesLayer, metadataMenu, mapTimeline } = components;
 

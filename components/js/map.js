@@ -1,6 +1,6 @@
 
 
-const getMap = function (bounds) {
+const getMap = (bounds) => {
   const map = L.map('map', {
     zoomControl: false,
   }).fitBounds(bounds);

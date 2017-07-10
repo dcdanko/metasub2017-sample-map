@@ -111,7 +111,7 @@ const updateWorldView = function updateWorldView() {
 };
 
 
-const updateView = function () {
+const updateView = function updateView() {
   const { view, components } = this.props();
   const { citiesLayer, metadataMenu } = components;
   citiesLayer.view(view);
