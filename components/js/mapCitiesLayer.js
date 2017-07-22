@@ -1,6 +1,6 @@
 
 
-import mapOverlayLayer from './visualization-components/mapOverlay/mapOverlayLayer';
+import MapOverlayLayer from './visualization-components/mapOverlay/mapOverlayLayer';
 import Tooltip from './visualization-components/tooltip/tooltip';
 
 
@@ -9,7 +9,7 @@ import Tooltip from './visualization-components/tooltip/tooltip';
 
 const formatCoordinates = d3.format(0.7);
 
-const citiesLayer = mapOverlayLayer()
+const citiesLayer = new MapOverlayLayer()
   .type('Point')
   .name('cities')
   .render('Vector')

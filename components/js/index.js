@@ -1,6 +1,6 @@
 import Promise from 'promise-polyfill';
-import mapOverlay from './visualization-components/mapOverlay/mapOverlay';
-import state from './visualization-components/state';
+import MapOverlay from './visualization-components/mapOverlay/mapOverlay';
+import State from './visualization-components/state';
 import map from './map';
 import citiesLayer from './mapCitiesLayer';
 import { summarizeCitiesData, processData } from './dataClean';
@@ -37,11 +37,6 @@ const removeLoadText = () => {
     .remove();
 };
 
-const syncOverlayWithBasemap = ({ sampleMap, d3Overlay }) => {
-  sampleMap.on('zoomstart', () => d3Overlay.hide());
-  sampleMap.on('zoomend', () => d3Overlay.show());
-  sampleMap.on('moveend', () => d3Overlay.update());
-};
 
 const draw = ({ citiesData, metadata }) => {
   removeLoadText();
@@ -53,18 +48,17 @@ const draw = ({ citiesData, metadata }) => {
   const mapContainer = d3.select('#sample-map-2017');
 
 
-  const mapState = state()
-    .defaultValues({
-      data: summarizedCitiesData,
-      rawCitiesData: citiesData,
-      filteredData: summarizedCitiesData,
-      width: mapContainer.node().getBoundingClientRect().width,
-      view: { view: 'world', city: '' },
-      metadataFilter: defaultMetadata,
-      time: summarizedCitiesData.timeExtent[1],
-      totalSamples: 0,
-      components: {},
-    });
+  const mapState = new State({
+    data: summarizedCitiesData,
+    rawCitiesData: citiesData,
+    filteredData: summarizedCitiesData,
+    width: mapContainer.node().getBoundingClientRect().width,
+    view: { view: 'world', city: '' },
+    metadataFilter: defaultMetadata,
+    time: summarizedCitiesData.timeExtent[1],
+    totalSamples: 0,
+    components: {},
+  });
 
   if (mapState.width() >= 992) {
     summarizedCitiesData.radiusScale.range([4, 30]);
@@ -90,12 +84,11 @@ const draw = ({ citiesData, metadata }) => {
     })
     .data(summarizedCitiesData.features);
 
-  const d3Overlay = mapOverlay()
+  const d3Overlay = new MapOverlay()
     .coordinateBounds(worldBounds)
     .addVectorLayer(citiesLayer)
     .addTo(sampleMap);
 
-  syncOverlayWithBasemap({ sampleMap, d3Overlay });
 
   const mapTimeline = timeline()
     .data(summarizedCitiesData.sampleFrequency)
