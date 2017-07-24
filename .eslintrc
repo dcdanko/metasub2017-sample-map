@@ -3,7 +3,8 @@
   "globals": {
     "d3": false,
     "L": false,
-    "window": false
+    "window": false,
+    "Image":false
   },
   "rules": {
     "max-lines": "error"

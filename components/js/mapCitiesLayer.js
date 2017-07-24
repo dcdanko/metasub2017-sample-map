@@ -1,11 +1,6 @@
-
-
 import MapOverlayLayer from './visualization-components/mapOverlay/mapOverlayLayer';
 import Tooltip from './visualization-components/tooltip/tooltip';
 
-
-// const mapTooltip = tooltip().selection(d3.select(".leaflet-map-pane"));
-// const getPositionOnPage = () => [d3.event.pageX, d3.event.pageY];
 
 const formatCoordinates = d3.format(0.7);
 

@@ -5,9 +5,9 @@ import map from './map';
 import citiesLayer from './mapCitiesLayer';
 import { summarizeCitiesData, processData } from './dataClean';
 import timeline from './timeline';
-import menu from './metadataMenu';
+import MetadataMenu from './metadataMenu';
 import button from './backButton';
-import readout from './readout';
+import Readout from './readout';
 import updateView from './updateView';
 import updateMetadata from './updateMetadata';
 import constants from './constants';
@@ -100,7 +100,7 @@ const draw = ({ citiesData, metadata }) => {
     .selection(mapContainer)
     .draw();
 
-  const metadataMenu = menu()
+  const metadataMenu = new MetadataMenu()
     .currentFeatures(summarizedCitiesData.allSamples)
     .selection(mapContainer)
     .metadataFilter(defaultMetadata)
@@ -119,7 +119,7 @@ const draw = ({ citiesData, metadata }) => {
       time: summarizedCitiesData.timeExtent[1],
     }));
 
-  const mapReadout = readout()
+  const mapReadout = new Readout()
     .selection(mapContainer)
     .position({
       bottom: mapTimeline.height(),

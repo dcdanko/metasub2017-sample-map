@@ -1,19 +1,37 @@
+import ChainableObject from './visualization-components/chainableObject';
 
+class MetadataMenu extends ChainableObject {
+  constructor() {
+    super([
+      'selection',
+      'data',
+      'position',
+      'onClick',
+      'metadataFilter',
+      'currentFeatures',
+      'time',
+    ]);
 
-import { getObjectWithPropMethods } from './visualization-components/utils';
+    this.defaultProps({
+      position: { left: 25, top: 100 },
+      padding: { left: 15, bottom: 15, right: 15, top: 15 },
+      width: 500,
+      category: '',
+      type: '',
+      isOpen: true,
+    });
 
-const props = getObjectWithPropMethods([
-  'selection',
-  'data',
-  // filteredData
-  'position',
-  'onClick',
-  'metadataFilter',
-  'currentFeatures',
-  'time',
-]);
+    const imagePaths = [
+      'https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_90/v1497477836/metasub/Asset5.png',
+      'https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497803360/metasub/Asset6.png',
+      'https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497477836/metasub/Asset4.png',
+    ];
 
-const methods = {
+    imagePaths.forEach((d) => {
+      const image = new Image();
+      image.src = d;
+    });
+  }
   draw() {
     const { selection } = this.props();
 
@@ -32,7 +50,7 @@ const methods = {
 
 
     return this;
-  },
+  }
   drawTitle() {
     const { titleContainer } = this.props();
     this._.menuTitle = titleContainer.append('div')
@@ -45,7 +63,7 @@ const methods = {
         this.updateOpenStatus();
       })
       .text('Filter Map by Metadata');
-  },
+  }
   drawCategories() {
     const { menuContainer, data, onClick } = this.props();
 
@@ -87,7 +105,7 @@ const methods = {
 
     this.updateOpenStatus();
     this.updateCategory();
-  },
+  }
   removeTypes() {
     const { menuContainer } = this.props();
     menuContainer
@@ -96,7 +114,7 @@ const methods = {
       .duration(500)
       .style('opacity', 0)
       .remove();
-  },
+  }
   drawTypes() {
     const { menuContainer, currentFeatures, category, data, onClick } = this.props();
     this.removeTypes();
@@ -145,13 +163,13 @@ const methods = {
       });
     this.drawTypeCounts();
     this._.typesContainer.transition().duration(500).style('opacity', 1);
-  },
+  }
   drawTypeCounts() {
     const { currentFeatures, types, category } = this.props();
     const getTypeCount = type => currentFeatures
       .filter(d => d[category] === type).length;
     this._.typeCounts = types.append('span').text(d => ` (${getTypeCount(d.type)})`);
-  },
+  }
   updateTime() {
     const { typeCounts, currentFeatures, time, category } = this.props();
     const getTypeCount = type => currentFeatures
@@ -159,22 +177,22 @@ const methods = {
     if (typeCounts !== undefined) {
       typeCounts.text(d => ` (${getTypeCount(d.type)})`);
     }
-  },
+  }
   updateOpenStatus() {
     const { menuContainer, isOpen } = this.props();
     // menuRows.classed("menu__row--off", isOpen ? false : true);
     menuContainer.classed('menu__container--off', !isOpen);
-  },
+  }
   updateCategory() {
     const { menuRows, category } = this.props();
     menuRows.classed('menu__row--active', d => d.category === category);
-  },
+  }
   updateFilter() {
     const { types, metadataFilter } = this.props();
     if (types !== undefined) {
       types.classed('menu__types-row--active', d => d.category === metadataFilter.category && d.type === metadataFilter.type);
     }
-  },
+  }
   updateView() {
     // reset metadata
     const { metadataFilter } = this.props();
@@ -182,20 +200,8 @@ const methods = {
     this._.type = metadataFilter.type;
     this.removeTypes();
     this.updateCategory();
-  },
-};
+  }
+}
 
-const metadataMenu = () => {
-  const defaultProps = { _: {
-    position: { left: 25, top: 100 },
-    padding: { left: 15, bottom: 15, right: 15, top: 15 },
-    width: 500,
-    category: '',
-    type: '',
-    isOpen: true,
-  },
-  };
-  return Object.assign(defaultProps, props, methods);
-};
 
-export default metadataMenu;
+export default MetadataMenu;

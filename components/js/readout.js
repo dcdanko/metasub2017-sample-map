@@ -1,18 +1,22 @@
+import ChainableObject from './visualization-components/chainableObject';
 
-
-import { getObjectWithPropMethods } from './visualization-components/utils';
-
-const props = getObjectWithPropMethods([
-  'position',
-  'total',
-  'metadataFilter',
-  'location',
-  'time',
-  'startTime',
-  'selection',
-]);
-
-const methods = {
+class Readout extends ChainableObject {
+  constructor() {
+    super([
+      'position',
+      'total',
+      'metadataFilter',
+      'location',
+      'time',
+      'startTime',
+      'selection',
+    ]);
+    this.defaultProps({
+      position: { left: 0, bottom: 150 },
+      total: 0,
+      location: 'Worldwide',
+    });
+  }
   draw() {
     const { selection } = this.props();
 
@@ -23,7 +27,7 @@ const methods = {
 
     this.update();
     return this;
-  },
+  }
   update() {
     // add time, starttime...
     const { readoutText, total, location, position } = this.props();
@@ -37,17 +41,8 @@ const methods = {
       bottom: `${position.bottom + 10}px`,
     })
     .text(`${total} ${samplesTaken} ${location}`);
-  },
-};
+  }
+}
 
-const readout = () => {
-  const defaultProps = { _: {
-    position: { left: 0, bottom: 150 },
-    total: 0,
-    location: 'Worldwide',
-  },
-  };
-  return Object.assign(defaultProps, props, methods);
-};
 
-export default readout;
+export default Readout;
