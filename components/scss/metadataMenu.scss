@@ -38,6 +38,7 @@
   background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497477836/metasub/Asset5.png");
   background-size: 19px 17px;
   background-repeat:no-repeat;
+  background-position: left center;
   cursor:pointer;
   color:white;
   
@@ -82,6 +83,7 @@
   color: $green-fill--solid;
   background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497803360/metasub/Asset6.png");
   background-size: 19px 17px;
+  background-position: left center;
 }
 
 .menu__types-row:hover, .menu__types-row--active{
@@ -91,6 +93,7 @@
 .menu__row--active, .menu__row--active:hover{
   background-image: url("https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497477836/metasub/Asset4.png");
   background-size: 15px 17px;
+  background-position: left center;
 }
 
 

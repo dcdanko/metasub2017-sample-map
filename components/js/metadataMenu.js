@@ -27,6 +27,7 @@ class MetadataMenu extends ChainableObject {
       'https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_85/v1497477836/metasub/Asset4.png',
     ];
 
+    // cache images
     imagePaths.forEach((d) => {
       const image = new Image();
       image.src = d;
