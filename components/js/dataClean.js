@@ -47,7 +47,7 @@ const summarizeCity = features => Object.assign(
   { sampleCount: features.length },
 );
 
-export const summarizeCitiesData = ({ data, metadataFilter }) => {
+export const summarizeCitiesData = ({ data, metadataFilter, width }) => {
   const summarizedCities = data.map((d) => {
     if (d.live) {
       const filteredFeatures = d.features.filter((feature) => {
@@ -76,11 +76,16 @@ export const summarizeCitiesData = ({ data, metadataFilter }) => {
     return samples;
   }, []);
 
+  const radiusScale = d3.scaleSqrt().domain(sampleTotalsExtent).range([4, 30]);
+
+  if (width < 992) {
+    radiusScale.range([4, 20]);
+  }
 
   const summarizedCitiesData = Object.assign(getSummary(allSamples), {
     features: summarizedCities,
     allSamples,
-    radiusScale: d3.scaleSqrt().domain(sampleTotalsExtent).range([4, 20]),
+    radiusScale,
   });
   return summarizedCitiesData;
 };

@@ -1,26 +1,35 @@
+import ChainableObject from './visualization-components/chainableObject';
+import Axes from './visualization-components/axes';
+import Line from './visualization-components/line';
+import Slider from './visualization-components/slider';
 
-
-import { getObjectWithPropMethods } from './visualization-components/utils';
-import Axes from './visualization-components/histogram/axes';
-import Line from './visualization-components/lineChart/line';
-import Slider from './visualization-components/slider/slider';
-
-const props = getObjectWithPropMethods([
-  'selection',
-  'data',
-  'width',
-  'height',
-  'position',
-  'time',
-  'drag',
-  'xValue',
-  'yValue',
-  'xScale',
-  'yScale',
-  'padding',
-]);
-
-const methods = {
+class Timeline extends ChainableObject {
+  constructor() {
+    super([
+      'selection',
+      'data',
+      'width',
+      'height',
+      'position',
+      'time',
+      'drag',
+      'xValue',
+      'yValue',
+      'xScale',
+      'yScale',
+      'padding',
+    ]);
+    this.defaultProps({
+      position: { left: 0, bottom: 0 },
+      padding: { left: 65, bottom: 40, right: 65, top: 10 },
+      textMargin: { left: 10, top: 15 },
+      width: 800,
+      minHeight: 150,
+      heightWidthRatio: 0.15,
+      xScale: d3.scaleTime(),
+      yScale: d3.scaleLinear(),
+    });
+  }
   drawSVG() {
     const { selection } = this.props();
     this._.svg = selection.append('svg')
@@ -34,7 +43,7 @@ const methods = {
       bottom: `${0}px`,
       'pointer-events': 'none',
     });
-  },
+  }
   drawYAxisLabel() {
     const { svg, padding } = this.props();
     svg.append('text').attrs({
@@ -43,26 +52,26 @@ const methods = {
       class: 'timeline__label',
     })
     .text('samples per hour');
-  },
+  }
   drawAxes() {
     const { svg } = this.props();
-    this._.axes = Axes()
+    this._.axes = new Axes()
       .selection(svg)
       .draw();
     const { xAxis, yAxis } = this._.axes.props();
     xAxis.attr('class', 'timeline__axis');
     yAxis.attr('class', 'timeline__axis');
-  },
+  }
   updateAxes() {
     const { axes, xScale, yScale } = this.props();
     axes
         .xScale(xScale)
         .yScale(yScale)
         .updateAxes();
-  },
+  }
   drawLine() {
     const { svg, xScale, yScale, data } = this.props();
-    this._.line = Line()
+    this._.line = new Line()
       .data(data)
       .xValue(d => d.x1)
       .yValue(d => d.length)
@@ -70,7 +79,7 @@ const methods = {
       .yScale(yScale)
       .selection(svg.append('g'))
       .draw();
-  },
+  }
   updateLine() {
     const { line, xScale, yScale, data } = this.props();
     line
@@ -78,27 +87,27 @@ const methods = {
       .xScale(xScale)
       .yScale(yScale)
       .draw();
-  },
+  }
   resizeLine() {
     const { line, yScale, xScale } = this.props();
     line.xScale(xScale)
       .yScale(yScale)
       .resize();
-  },
+  }
   drawSlider() {
     const { svg, drag, time } = this.props();
-    this._.slider = Slider()
+    this._.slider = new Slider()
       .currentValue(time)
       .drag(drag)
       .selection(svg)
       .draw();
-  },
+  }
   updateSliderTime() {
     const { slider, time } = this.props();
     slider
       .currentValue(time)
       .updateCurrentValue();
-  },
+  }
 
   resizeSlider() {
     const { slider, xScale, height, padding } = this.props();
@@ -107,7 +116,7 @@ const methods = {
       .height(height)
       .xScale(xScale)
       .setSliderSize();
-  },
+  }
 
   resizeSVG() {
     const { svg, height, width } = this.props();
@@ -115,12 +124,12 @@ const methods = {
       width: `${width}px`,
       height: `${height}px`,
     });
-  },
+  }
   setScales() {
     const { xScale, yScale, height, width, padding } = this.props();
     xScale.range([padding.left, width - padding.right]).clamp(true);
     yScale.range([height - padding.bottom, padding.top]);
-  },
+  }
   resizeAxes() {
     const { axes, yScale, padding, xScale, height } = this.props();
     axes.padding(padding)
@@ -129,7 +138,7 @@ const methods = {
       .yScale(yScale)
       .xScale(xScale)
       .setSize();
-  },
+  }
 
   setHeightFromRatio() {
     const { heightWidthRatio, width, minHeight } = this.props();
@@ -138,7 +147,7 @@ const methods = {
     } else {
       this._.height = minHeight;
     }
-  },
+  }
   draw() {
     this.drawSVG();
     this.setHeightFromRatio();
@@ -151,7 +160,7 @@ const methods = {
     this.updateSize();
 
     return this;
-  },
+  }
   updateSize() {
     this.setHeightFromRatio();
     this.setScales();
@@ -159,31 +168,16 @@ const methods = {
     this.resizeAxes();
     this.resizeLine();
     this.resizeSlider();
-  },
+  }
   updateView() {
     this.setScales();
     this.updateAxes();
     this.updateLine();
     this.resizeSlider();
-  },
+  }
   updateTime() {
     this.updateSliderTime();
-  },
-};
+  }
+}
 
-const timeline = () => {
-  const defaultProps = { _: {
-    position: { left: 0, bottom: 0 },
-    padding: { left: 65, bottom: 40, right: 65, top: 10 },
-    textMargin: { left: 10, top: 15 },
-    width: 800,
-    minHeight: 150,
-    heightWidthRatio: 0.15,
-    xScale: d3.scaleTime(),
-    yScale: d3.scaleLinear(),
-  },
-  };
-  return Object.assign(defaultProps, props, methods);
-};
-
-export default timeline;
+export default Timeline;

@@ -1,5 +1,5 @@
 import MapOverlayLayer from './visualization-components/mapOverlay/mapOverlayLayer';
-import Tooltip from './visualization-components/tooltip/tooltip';
+import Tooltip from './visualization-components/tooltip';
 
 
 const formatCoordinates = d3.format(0.7);
@@ -12,7 +12,7 @@ const citiesLayer = new MapOverlayLayer()
   .draw(function draw() {
     const { data, group, view, map, onCityClick } = this.props();
 
-    this._.mapTooltip = Tooltip().selection(d3.select(map.getPanes().overlayPane));
+    this._.mapTooltip = new Tooltip().selection(d3.select(map.getPanes().overlayPane));
 
 
     const { mapTooltip } = this.props();
