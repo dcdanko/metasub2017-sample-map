@@ -40,7 +40,6 @@ const draw = ({ citiesData, metadata }) => {
   const state = new State({
     data: summarizedCitiesData,
     rawCitiesData: citiesData,
-    filteredData: summarizedCitiesData,
     width: mapContainer.getWidth(),
     view: { view: 'world', city: '' },
     metadataFilter: defaultMetadata,
