@@ -1,34 +1,37 @@
-import ChainableObject from './visualization-components/chainableObject';
+import Props from './visualization-components/props';
 import Axes from './visualization-components/axes';
 import Line from './visualization-components/line';
 import Slider from './visualization-components/slider';
 
-class Timeline extends ChainableObject {
+const props = new Props([
+  'selection',
+  'data',
+  'width',
+  'height',
+  'position',
+  'time',
+  'drag',
+  'xValue',
+  'yValue',
+  'xScale',
+  'yScale',
+  'padding',
+]);
+
+props.setDefaultValues({
+  position: { left: 0, bottom: 0 },
+  padding: { left: 65, bottom: 40, right: 65, top: 10 },
+  textMargin: { left: 10, top: 15 },
+  width: 800,
+  minHeight: 150,
+  heightWidthRatio: 0.15,
+  xScale: d3.scaleTime(),
+  yScale: d3.scaleLinear(),
+});
+
+class Timeline {
   constructor() {
-    super([
-      'selection',
-      'data',
-      'width',
-      'height',
-      'position',
-      'time',
-      'drag',
-      'xValue',
-      'yValue',
-      'xScale',
-      'yScale',
-      'padding',
-    ]);
-    this.defaultProps({
-      position: { left: 0, bottom: 0 },
-      padding: { left: 65, bottom: 40, right: 65, top: 10 },
-      textMargin: { left: 10, top: 15 },
-      width: 800,
-      minHeight: 150,
-      heightWidthRatio: 0.15,
-      xScale: d3.scaleTime(),
-      yScale: d3.scaleLinear(),
-    });
+    props.addTo(this);
   }
   drawSVG() {
     const { selection } = this.props();

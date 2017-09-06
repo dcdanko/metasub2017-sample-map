@@ -1,25 +1,27 @@
-import ChainableObject from './visualization-components/chainableObject';
+import Props from './visualization-components/props';
 
-class MetadataMenu extends ChainableObject {
+const props = new Props([
+  'selection',
+  'data',
+  'position',
+  'onClick',
+  'metadataFilter',
+  'currentFeatures',
+  'time',
+]);
+
+props.setDefaultValues({
+  position: { left: 25, top: 100 },
+  padding: { left: 15, bottom: 15, right: 15, top: 15 },
+  width: 500,
+  category: '',
+  type: '',
+  isOpen: true,
+});
+
+class MetadataMenu {
   constructor() {
-    super([
-      'selection',
-      'data',
-      'position',
-      'onClick',
-      'metadataFilter',
-      'currentFeatures',
-      'time',
-    ]);
-
-    this.defaultProps({
-      position: { left: 25, top: 100 },
-      padding: { left: 15, bottom: 15, right: 15, top: 15 },
-      width: 500,
-      category: '',
-      type: '',
-      isOpen: true,
-    });
+    props.addTo(this);
 
     const imagePaths = [
       'https://res.cloudinary.com/djdqwtoc5/image/upload/c_lpad,h_90/v1497477836/metasub/Asset5.png',

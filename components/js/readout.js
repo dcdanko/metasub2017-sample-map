@@ -1,21 +1,24 @@
-import ChainableObject from './visualization-components/chainableObject';
+import Props from './visualization-components/props';
 
-class Readout extends ChainableObject {
+const props = new Props([
+  'position',
+  'total',
+  'metadataFilter',
+  'location',
+  'time',
+  'startTime',
+  'selection',
+]);
+
+props.setDefaultValues({
+  position: { left: 0, bottom: 150 },
+  total: 0,
+  location: 'Worldwide',
+});
+
+class Readout {
   constructor() {
-    super([
-      'position',
-      'total',
-      'metadataFilter',
-      'location',
-      'time',
-      'startTime',
-      'selection',
-    ]);
-    this.defaultProps({
-      position: { left: 0, bottom: 150 },
-      total: 0,
-      location: 'Worldwide',
-    });
+    props.addTo(this);
   }
   draw() {
     const { selection } = this.props();
