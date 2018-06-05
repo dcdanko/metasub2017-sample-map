@@ -119,15 +119,18 @@ export const processData = ({ citiesData, metadata, callback }) => {
   const cleanCitiesData = citiesData.map((city) => {
     const cityCopy = Object.assign({}, city);
     if (city.live) {
-      cityCopy.features = city.features.map((feature) => {
-        const featureCopy = Object.assign({}, feature);
-        featureCopy.time = new Date(feature.end.slice(0, feature.end.indexOf('.')));
-        featureCopy.lat = feature._geolocation[0]; // eslint-disable-line no-underscore-dangle
-        featureCopy.lon = feature._geolocation[1]; // eslint-disable-line no-underscore-dangle
-        featureCopy.attachments = feature._attachments; // eslint-disable-line no-underscore-dangle
-        featureCopy.id = feature._id; // eslint-disable-line no-underscore-dangle
-        return featureCopy;
-      });
+      cityCopy.features = city.features
+        .filter(feature => Object.prototype.hasOwnProperty.call(feature, 'end'))
+        .map((feature) => {
+          const featureCopy = Object.assign({}, feature);
+          featureCopy.time = new Date(feature.end.slice(0, feature.end.indexOf('.')));
+          featureCopy.lat = feature._geolocation[0]; // eslint-disable-line no-underscore-dangle
+          featureCopy.lon = feature._geolocation[1]; // eslint-disable-line no-underscore-dangle
+          featureCopy.attachments =
+            feature._attachments; // eslint-disable-line no-underscore-dangle
+          featureCopy.id = feature._id; // eslint-disable-line no-underscore-dangle
+          return featureCopy;
+        });
     }
     Object.assign(cityCopy, cityFeatureProto);
     return cityCopy;
