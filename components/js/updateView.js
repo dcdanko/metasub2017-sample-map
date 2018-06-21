@@ -24,11 +24,17 @@ const distance = (lat1, lon1, lat2, lon2, unit) => {
 };
 
 const getNewBounds = (selectedCity) => {
-  const pointsInView = selectedCity.features.filter((d) => {
-    const distanceFromCenter = distance(parseFloat(selectedCity.lat),
-      parseFloat(selectedCity.lon), d.lat, d.lon);
+  const cityLat = parseFloat(selectedCity.lat);
+  const cityLon = parseFloat(selectedCity.lon);
+  let pointsInView = selectedCity.features.filter((d) => {
+    const distanceFromCenter = distance(cityLat, cityLon, d.lat, d.lon);
     return distanceFromCenter < 500;
   });
+  if (pointsInView.length === 0) {
+    // No points found within 500m of city center.
+    // Likely due to { _geolocation: [0.1, 0.1] } feature property
+    pointsInView = [{ lat: cityLat, lon: cityLon }];
+  }
   const latExtent = d3.extent(pointsInView, d => d.lat);
   const lonExtent = d3.extent(pointsInView, d => d.lon);
   return [[latExtent[1], lonExtent[0]], [latExtent[0], lonExtent[1]]];
