@@ -119,7 +119,7 @@ export const processData = ({ citiesData, metadata, callback }) => {
   const cleanCitiesData = citiesData.map((city) => {
     const cityCopy = Object.assign({}, city);
     if (city.live) {
-      cityCopy.features = city.features
+      cityCopy.features = (city.features || [])
         .filter(feature => Object.prototype.hasOwnProperty.call(feature, 'end'))
         .map((feature) => {
           const featureCopy = Object.assign({}, feature);
